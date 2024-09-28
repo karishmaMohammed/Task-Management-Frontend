@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../constant";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+
 
 function RegisterAndLogin({ type }) {
   const [formData, setFormData] = useState({
@@ -41,25 +43,33 @@ function RegisterAndLogin({ type }) {
   }
   const handleSubmit = async(e) => {
     e.preventDefault();
-    if (type === "register") {
-     const registerResponse = await axios.post(BASE_URL + "/member/register", {
-      full_name : formData.name,
-      email: formData.email,
-      phone_number:formData.phoneNumber,
-      password: formData.password,
-      gender: formData.gender,
-    })
-      console.log("Registering:", registerResponse);
-    } else if(type === "login"){
-      const loginResponse = await axios.post(BASE_URL + '/member/login', {
-        email:formData.email, password: formData.password
-      });
-      const token = loginResponse.data.data.user_token;
-      if(token){
-        verifyMember(token)
-      }
-      console.log("Logging in:", loginResponse);
+    try {
+      if (type === "register") {
+        const registerResponse = await axios.post(BASE_URL + "/member/register", {
+         full_name : formData.name,
+         email: formData.email,
+         phone_number:formData.phoneNumber,
+         password: formData.password,
+         gender: formData.gender,
+       })
+         console.log("Registering:", registerResponse);
+       } else if(type === "login"){
+         const loginResponse = await axios.post(BASE_URL + '/member/login', {
+           email:formData.email, password: formData.password
+         });
+         if(loginResponse.data.meta.success !== true){
+           toast.error(loginResponse.data.meta.message)
+         }
+         const token = loginResponse.data.data.user_token;
+         if(token){
+           verifyMember(token)
+         }
+         console.log("Logging in:", loginResponse);
+       }
+    } catch (error) {
+      console.log('something went wrong!', error)
     }
+   
   };
 
   return (
