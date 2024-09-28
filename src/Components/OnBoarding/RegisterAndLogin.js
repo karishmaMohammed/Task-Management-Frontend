@@ -15,6 +15,13 @@ function RegisterAndLogin({ type }) {
     gender: "",
   });
 
+  const toastStyle = {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    pauseOnHover: true,
+    draggable: true,
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -52,13 +59,16 @@ function RegisterAndLogin({ type }) {
          password: formData.password,
          gender: formData.gender,
        })
+       if(registerResponse.data.meta.success !== true){
+        toast.error(registerResponse.data.meta.message, toastStyle)
+      }
          console.log("Registering:", registerResponse);
        } else if(type === "login"){
          const loginResponse = await axios.post(BASE_URL + '/member/login', {
            email:formData.email, password: formData.password
          });
          if(loginResponse.data.meta.success !== true){
-           toast.error(loginResponse.data.meta.message)
+           toast.error(loginResponse.data.meta.message, toastStyle)
          }
          const token = loginResponse.data.data.user_token;
          if(token){

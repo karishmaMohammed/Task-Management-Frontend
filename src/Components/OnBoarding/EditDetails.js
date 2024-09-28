@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import axios from "axios";
 import { BASE_URL } from "../../constant";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 function EditDetails({ type}) {
    
@@ -15,7 +16,13 @@ function EditDetails({ type}) {
         gender: '',
     });
    
-
+    const toastStyle = {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        pauseOnHover: true,
+        draggable: true,
+      };
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -34,6 +41,9 @@ function EditDetails({ type}) {
                   {action:action},
                 { headers }
               );
+              if(memberDetails.data.meta.success !== true){
+                toast.error(memberDetails.data.meta.message, toastStyle)
+              }
             console.log('member details edited', memberDetails);
             
         } catch (error) {
@@ -59,6 +69,9 @@ function EditDetails({ type}) {
                       profileData,
                     { headers }
                   );
+                  if(editDetails.data.meta.success !== true){
+                    toast.error(editDetails.data.meta.message, toastStyle)
+                  }
                 console.log('member details edited', editDetails);
             } else if(type === 'password') {
                 const headers = {
@@ -74,6 +87,9 @@ function EditDetails({ type}) {
                     passwordData,
                     { headers }
                   );
+                  if(editPassword.data.meta.success !== true){
+                    toast.error(editPassword.data.meta.message, toastStyle)
+                  }
                 console.log('change password', editPassword);
             } 
         } catch (error) {
