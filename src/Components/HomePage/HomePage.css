@@ -1,0 +1,184 @@
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  /* height: 100px; */
+  /* border: 1px solid grey; */
+  padding: 10px;
+  padding-right: 50px;
+  box-sizing: border-box;
+  z-index: 1;
+}
+
+.login-buttons {
+  display: flex;
+  align-items: center;
+  border: 1px solid grey;
+  border-radius: 10px;
+  padding: 2px;
+}
+.login-buttons button {
+  width: 100px;
+}
+.login-buttons button:nth-child(1) {
+  background: purple;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+}
+.login-buttons button:nth-child(2) {
+  background: white;
+  color: purple;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+}
+
+.user-icons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.user-icons img {
+  width: 36px;
+  height: 36px;
+}
+@media screen and (max-width: 450px) {
+  .logo div,
+  .logo span {
+    display: none;
+    border: none;
+  }
+  .logo {
+    border: none;
+  }
+}
+
+/* HOME TOP NAVBAR */
+.home-nav-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 40px;
+    width: 100%;
+    border: 1px solid purple;
+    box-sizing: border-box;
+}
+.app-name-features{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.log-sign-mode-btns{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+   
+    width: 20%;
+}
+.log-sign-mode-btns button{
+    background: #ff6e7f;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    color: #fff;
+}
+.log-sign-mode-btns button:hover{
+    cursor: pointer;
+}
+
+/* HOME PAGE DESIGN */
+.home-page-container {
+  display: flex;
+  flex-direction: column;
+  background: rgb(244, 240, 235);
+  height: 88.75vh;
+}
+
+.home-page {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+  height: 75vh;
+}
+.home-page-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 10px;
+  width: 40%;
+}
+.home-page-text-head{
+    font-size: 48px;
+    font-weight: 600;
+    color: #ff6e7f;
+}
+
+.home-page-logo {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  /* border: 1.5px solid rgb(240, 60, 240); */
+  border-radius: 25px;
+  height: 65vh;
+  width: 40%;
+}
+.home-explore-btn {
+  padding: 50px 0px 0px 30px;
+}
+
+.home-explore-btn button {
+    background-image: linear-gradient(to right, #ff6e7f 0%, rgb(243, 103, 243) 51%, #bfe9ff 100%);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-size: 16px;
+    text-transform: uppercase;
+    border: none;
+    background-size: 200% auto; /* Ensures background covers more space for animation */
+    color: white;
+    box-shadow: 0 0 20px #eee;
+    border-radius: 10px;
+    animation: gradientBackground 5s linear infinite; /* Apply the animation */
+    transition: 0.5s;
+}
+
+/* Define the animation for infinite color change */
+@keyframes gradientBackground {
+    0% {
+        background-position: 0% 50%; /* Start position */
+    }
+    50% {
+        background-position: 100% 50%; /* Midpoint position */
+    }
+    100% {
+        background-position: 0% 50%; /* End position to create a loop */
+    }
+}
+
+.home-explore-btn button:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+.home-explore-btn button img {
+  width: 20px;
+  height: 20px;
+  filter: invert(1);
+}
+.home-page-logo img {
+  width: 80%;
+  height: 50vh;
+}
+.created-by {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}

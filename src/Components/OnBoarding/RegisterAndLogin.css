@@ -1,0 +1,110 @@
+.login-signup-container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 2;
+  top: 0px;
+  bottom: 0px;
+  box-sizing: border-box;
+}
+.login-signup-pop-up-div {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-right: 20%;
+  align-items: center;
+  gap: 20px;
+  background: #f0f8fd;
+  border: 2px solid #ff6e7f;
+  border-radius: 25px;
+  padding: 20px 0px;
+  width: 30%;
+  min-height: 30vh;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.login-signup-close {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    padding: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+.login-signup-pop-up-div form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  justify-content: center;
+}
+
+.login-signup-pop-up-div form button {
+    padding: 50px 0px 0px 30px;
+  }
+  
+  .login-signup-pop-up-div form button{
+      background-image: linear-gradient(to right, #ff6e7f 0%, rgb(243, 103, 243) 51%, #bfe9ff 100%);
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      font-size: 14px;
+      text-transform: uppercase;
+      border: none;
+      background-size: 200% auto; /* Ensures background covers more space for animation */
+      color: white;
+      box-shadow: 0 0 20px #eee;
+      border-radius: 10px;
+      animation: gradientBackground 5s linear infinite; /* Apply the animation */
+      transition: 0.5s;
+  }
+  
+  /* Define the animation for infinite color change */
+  @keyframes gradientBackground {
+      0% {
+          background-position: 0% 50%; /* Start position */
+      }
+      50% {
+          background-position: 100% 50%; /* Midpoint position */
+      }
+      100% {
+          background-position: 0% 50%; /* End position to create a loop */
+      }
+  }
+  
+  .login-signup-pop-up-div form button:hover {
+      color: #fff;
+      text-decoration: none;
+  }
+  
+.login-signup-input {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.login-signup-input span {
+  width: 30%;
+  text-align: right;
+}
+.login-signup-input input {
+  width: 60%;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 20px;
+  border: 1px solid purple;
+  outline: none;
+}
+.login-signup-gender {
+  width: 70%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.login-signup-gender label {
+  display: flex;
+}

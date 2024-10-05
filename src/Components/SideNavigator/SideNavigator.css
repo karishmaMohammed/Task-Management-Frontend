@@ -1,0 +1,32 @@
+.sidebar-nav-container{
+    display: flex;
+    flex-direction: column;
+    width: 12%;
+    border: 2px solid rgb(240, 8, 240);
+    border-radius: 20px;
+    background: rgba(227, 181, 238, 0.50);
+    padding: 10px;
+    height: 90vh;
+    left:10px;
+    box-sizing: border-box;
+    justify-content: space-between;
+    position: fixed;
+    z-index: 3;
+    top: 5%;
+}
+.app-name-logo-navs{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.task-navigators{
+    display: flex;
+    flex-direction: column; 
+    gap: 10px;   
+}
+.app-name-logo, .task-nav, .log-out-btn{
+    display: flex;
+    gap: 5px;
+    width: 100%; 
+    align-items: center;
+}
