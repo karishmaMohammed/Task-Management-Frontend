@@ -58,16 +58,16 @@ function NavBar({ children }) {
             <img
               src="https://cdn-icons-png.freepik.com/256/17329/17329316.png?ga=GA1.1.706441703.1694584519&semt=ais_hybrid"
               alt="lite-mode"
-              width={30}
-              height={30}
+              width={40}
+              height={40}
               onClick={handleMode}
             />
           ) : (
             <img
               src="https://cdn-icons-png.freepik.com/256/547/547433.png?ga=GA1.1.706441703.1694584519&semt=ais_hybrid"
               alt="dark-mode"
-              width={30}
-              height={30}
+              width={40}
+              height={40}
               onClick={handleMode}
             />
           )}

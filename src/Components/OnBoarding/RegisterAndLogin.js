@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import CloseIcon from "@mui/icons-material/Close";
 
 function RegisterAndLogin({ type, onclose }) {
-  const [ togglePopUp, setTogglePopUp] = useState(type)
+  const [togglePopUp, setTogglePopUp] = useState(type);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -90,11 +90,15 @@ function RegisterAndLogin({ type, onclose }) {
   return (
     <div className="login-signup-container">
       <div className="login-signup-pop-up-div">
-        {togglePopUp === "register" ? <span>Register</span> : <span>LogIn</span>}
+        {togglePopUp === "register" ? (
+          <span>Register</span>
+        ) : (
+          <span>LogIn</span>
+        )}
         <div className="login-signup-close" onClick={() => onclose()}>
-        <CloseIcon />
+          <CloseIcon />
         </div>
-     
+
         <form onSubmit={handleSubmit}>
           {togglePopUp === "register" && (
             <div className="login-signup-input">
@@ -187,11 +191,13 @@ function RegisterAndLogin({ type, onclose }) {
           <div>
             {togglePopUp === "register" ? (
               <span>
-                Already registered? Please <a onClick={() => setTogglePopUp('login')}>Login</a>
+                Already registered? Please{" "}
+                <a onClick={() => setTogglePopUp("login")}>Login</a>
               </span>
             ) : (
               <span>
-                Don't have an account? <a onClick={() => setTogglePopUp('register')}>Signup</a>
+                Don't have an account?{" "}
+                <a onClick={() => setTogglePopUp("register")}>Signup</a>
               </span>
             )}
           </div>
