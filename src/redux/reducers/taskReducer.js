@@ -1,26 +1,38 @@
-const initialState = {
+// reducers/taskReducer.js
+import {
+    CREATE_TASK_REQUEST,
+    CREATE_TASK_SUCCESS,
+    CREATE_TASK_FAILURE,
+    // other action types
+  } from '../actionTypes';
+  
+  const initialState = {
+    loading: false,
     tasks: [],
+    error: '',
   };
   
   const taskReducer = (state = initialState, action) => {
     switch (action.type) {
-      case 'ADD_TASK':
+      case CREATE_TASK_REQUEST:
         return {
           ...state,
-          tasks: [...state.tasks, action.payload],
+          loading: true,
         };
-      case 'EDIT_TASK':
+      case CREATE_TASK_SUCCESS:
         return {
           ...state,
-          tasks: state.tasks.map((task) =>
-            task.id === action.payload.id ? action.payload : task
-          ),
+          loading: false,
+          tasks: [...state.tasks, action.payload], // Add the newly created task
+          error: '',
         };
-      case 'REMOVE_TASK':
+      case CREATE_TASK_FAILURE:
         return {
           ...state,
-          tasks: state.tasks.filter(task => task.id !== action.payload.id),
+          loading: false,
+          error: action.payload, // Set error message
         };
+      // Handle other actions...
       default:
         return state;
     }

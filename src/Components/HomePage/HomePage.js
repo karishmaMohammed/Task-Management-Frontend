@@ -1,11 +1,22 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import "./HomePage.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../../constant";
 import Cookies from "js-cookie";
 import upArrow from "../../Assets/ArrowUpRight.png";
 
+
 function HomePage() {
+  
   const nav = useNavigate();
+
+ 
+
+ 
+   
+
+   
 
   const handleLogout = () => {
     // Clear the token from cookies

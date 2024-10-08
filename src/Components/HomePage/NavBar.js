@@ -1,14 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
+import axios from "axios";
+import { BASE_URL } from "../../constant";
+import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import RegisterAndLogin from "../OnBoarding/RegisterAndLogin";
+
+
 
 function NavBar({ children }) {
   const [mode, setMode] = useState(false);
   const [logInSignupPopUp, setLogInSignupPopUp] = useState(false);
   const [action, setAction] = useState("");
+  const [tokenvalue, setTokenValue] = useState('')
 
   const nav = useNavigate();
+ 
+  
 
   const customStyle = {
     control: (provided) => ({
@@ -78,6 +86,7 @@ function NavBar({ children }) {
         <RegisterAndLogin
           type={action}
           onclose={() => setLogInSignupPopUp(!logInSignupPopUp)}
+          setTokenValue={setTokenValue}
         />
       )}
     </>
