@@ -1,0 +1,434 @@
+.template-page{
+    display: flex;
+    width: 100%;
+}
+.template-draging{
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+}
+.template-dropping{
+    width: 80%;
+    max-height: 100vh;
+    border: 2px dashed #ccc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+    max-height: 80vh;
+}
+.template-dropping h3{
+    font-size: 32px;
+}
+.template-dropping form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+   max-height: 80vh; /* Two columns of equal width */
+    gap: 16px;
+    overflow-y: scroll;
+     /* Space between the grid items, adjust as needed */
+}
+.form-input-divs,.form-input-priority{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.form-input-divs label,.form-input-priority label{
+    width: 100px;
+}
+.form-input-divs input{
+    /* width: 100%; */
+    width: 300px;
+    height: 40px;
+    padding: 5px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    resize: none;
+}
+.form-input-divs textarea{
+    width: 300px;
+    height: 50px;
+    padding: 5px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    resize: none;
+}
+
+/* form-model */
+.form-model {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #ccc;
+    background-color: white;
+    padding: 20px;
+    z-index: 1000;
+    border-radius: 8px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+.save-btn,.cancel-btn{
+    padding: 10px;
+    width: 100px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+.form-model-div{
+    display: flex;
+    align-items: center;
+}
+.form-model-div input{
+    padding: 10px 5px;
+    border-radius: 8px;
+    outline: none;
+    box-sizing: border-box;
+    width: 250px;
+    
+}
+
+
+
+/* TASK DETAILS PAGE STYLING */
+.details-page {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 24px;
+    box-sizing: border-box;
+    
+    height: 90vh;
+}
+
+.details-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 70%;
+    box-sizing: border-box;
+}
+
+.details-field-priority {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.details-label-priority {
+    font-size: 18px;
+}
+
+.details-field-title {
+    box-sizing: border-box;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    /* border-bottom: 2px solid black; */
+    width: 100%;
+}
+
+.details-field-title textarea {
+    width: 100%;
+
+    border: 1px solid #edf2f7;
+}
+
+.details-value-title {
+    width: 100%;
+    word-break: break-all;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 24px;
+}
+
+.details-field-details-div {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.details-field-details-div-left {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 70%;
+}
+
+.details-field-comments {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 30vh;
+
+    overflow-y: scroll;
+}
+
+.details-field-comments-cont {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.details-field-comments-cont span {
+    background: rgb(234, 233, 233);
+    padding: 5px;
+    box-sizing: border-box;
+    width: 90%;
+    word-break: break-all;
+}
+
+.sub-tasks-add {
+
+    cursor: pointer;
+}
+
+.priority-color {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+
+}
+
+.sub-tasks {
+    margin-left: 10px;
+    width: 80%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    gap: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+}
+
+.sub-tasks-head {
+    padding: 10px 10px;
+    border-bottom: 1px solid grey;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sub-tasks-rows {
+
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+}
+
+.sub-tasks-rows-cont {
+    /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+    display: flex;
+    padding: 10px 10px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    text-align: left;
+
+    border-radius: 10px;
+}
+
+.sub-tasks-rows-cont:hover {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    cursor: pointer;
+}
+
+.sub-tasks-rows-cont span {
+
+    width: 33%;
+}
+
+.details-field-details-div-right {
+    width: 40%;
+    /* height: 200px; */
+}
+
+.details-right {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid red;
+    gap: 10px;
+    width: 100%;
+    border-radius: 28px;
+    height: 85vh;
+    overflow-y: scroll;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.details-right-cont {
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    gap: 10px;
+    width: 28%;
+
+
+}
+.details-right-cont-top{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-end;
+}
+.details-right-cont-top img{
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+::-webkit-scrollbar {
+    display: none;
+}
+
+.details-right-top {
+    display: flex;
+    text-align: left;
+    font-size: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid black;
+}
+
+.details-right-bottom {
+    display: flex;
+
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.details-right-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    gap: 10px;
+}
+
+.details-right-row span {
+    width: 30%;
+    font-size: 18px;
+}
+
+.details-right-input {
+    width: 65%;
+    padding: 5px;
+    border-radius: 8px;
+    border: 1px solid red;
+}
+
+/* date chart */
+/* DateContainer.css */
+
+
+/* Remove default borders */
+.react-calendar {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    border: none;
+    border-radius: 20px;
+}
+
+/* Apply border radius and styling to each calendar tile */
+.react-calendar__tile {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    /* Make each tile circular */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.react-calendar__navigation button:focus {
+    background-color: transparent !important;
+    outline: none;
+}
+
+/* Style today's date tile */
+.react-calendar__tile--now {
+    background-color: #f0f8ff;
+    /* Light background for today's date */
+}
+
+/* Style the selected date tile */
+.react-calendar__tile--active {
+    background-color: yellow;
+    border-radius: 50%;
+}
+
+/* Style task name within tiles */
+.task-tile {
+    cursor: pointer;
+    color: blue;
+    text-align: center;
+}
+
+
+
+
+
+/* change logs */
+.change-logs{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #ccc;
+    background-color: white;
+    padding: 20px;
+    z-index: 1000;
+    border-radius: 8px;
+    width: 30%;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+}
+.change-logs-cont{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+}
+.change-logs-head{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.change-logs-content{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+.change-logs-content span{
+    width: 45%;
+    word-break: break-all;
+}
+.change-logs-btns{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: flex-end;
+}
+.change-logs-btns button{
+    padding: 10px 5px;
+    width: 100px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
