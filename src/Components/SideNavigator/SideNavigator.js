@@ -24,7 +24,7 @@ function SideNavigator() {
               width={40}
               height={40}
             />
-            <span>Task Template</span>
+            <span>Create Task</span>
           </div>
           <div className="task-nav">
             <img

@@ -164,54 +164,49 @@ function Notification({ onclose, handleMakeZero }) {
         notify_types === "member-removed"
       ) {
         nav(`/org-home/?notify=${id}`, { replace: true });
-      }
-      else if (
+      } else if (
         notify_types === "create-template" ||
         notify_types === "version-template"
       ) {
         nav(`/template/?notify=${id}`, { replace: true });
-      }
-      else if (
+      } else if (
         notify_types === "ec-create-template" ||
         notify_types === "ec-version-template"
       ) {
         nav(`/ec-template/?notify=${id}`, { replace: true });
-      }
-      else if (
+      } else if (
         notify_types === "asset-template" ||
         notify_types === "create-asset-template"
       ) {
         nav(`/assets-template?notify=${id}`, { replace: true });
-      }
-      else if (notify_types === "supply-chain-version-template") {
+      } else if (notify_types === "supply-chain-version-template") {
         nav(`/supply-chain-templates?notify=${id}`, { replace: true });
-      }
-      else if (
+      } else if (
         notify_types === "purchase-order-version-template" ||
         notify_types === "create-PO-template"
       ) {
         nav(`/purchase-order-templates?notify=${id}`, { replace: true });
-      } else if (
-        notify_types === "pc-created" 
-      ) {
+      } else if (notify_types === "pc-created") {
         nav(`/pc-templates?notify=${id}`, { replace: true });
-      }
-      else if (notify_types === "edit-ticket" || notify_types === "create-ticket") {
+      } else if (
+        notify_types === "edit-ticket" ||
+        notify_types === "create-ticket"
+      ) {
         nav(`/ticket-view/${ticketId}/?notify=${id}`, { replace: true });
-      }
-      else if (notify_types === "ec-created") {
+      } else if (notify_types === "ec-created") {
         nav(`/all-ec-list/?notify=${id}`, { replace: true });
-      }else if (notify_types === "prod-change-version-template"||notify_types === 'create-prod-chan-template') {
+      } else if (
+        notify_types === "prod-change-version-template" ||
+        notify_types === "create-prod-chan-template"
+      ) {
         nav(`/pc-templates/?notify=${id}`, { replace: true });
-      }else {
-        console.log('else part');
+      } else {
+        console.log("else part");
       }
       onclose();
     } catch (error) {
       console.log(error);
     }
-
-    
   };
   // const handleClick =()=>{
   //   setActiveElement(element)
@@ -239,7 +234,9 @@ function Notification({ onclose, handleMakeZero }) {
         <div className="notif-top">
           <div className="notification-title">
             {/* <img src={`${ASSET_PREFIX_URL}bell_icon.png`} alt="" /> */}
-            <span>Notifications</span>
+            <span style={{ color: "#257180", fontSize: "24px" }}>
+              Notifications
+            </span>
             {/* <img
               onClick={() => handleReload()}
             //   src={`${ASSET_PREFIX_URL}refresh_2805355.png`}
@@ -249,7 +246,9 @@ function Notification({ onclose, handleMakeZero }) {
             /> */}
           </div>
 
-          <CloseIcon onClick={handleClose} />
+          <div className="notification-close-btn">
+            <CloseIcon onClick={handleClose} />
+          </div>
         </div>
 
         <div className="notification-all-unread">
@@ -319,7 +318,11 @@ function Notification({ onclose, handleMakeZero }) {
                   memberPhoto={element.member_photo}
                   fontweight="500"
                 /> */}
-                <img width="35px" height='35px' src="https://marathon-web-assets.s3.ap-south-1.amazonaws.com/Add+action-d3.svg"/>
+                <img
+                  width="35px"
+                  height="35px"
+                  src="https://marathon-web-assets.s3.ap-south-1.amazonaws.com/Add+action-d3.svg"
+                />
 
                 <div className="notif-content">
                   <div className="notifi-desc">
@@ -478,7 +481,7 @@ function Notification({ onclose, handleMakeZero }) {
                         {/* {element.ticket_sequence_id}.{" "} */}
                       </span>
                     )}
-                     {element.notify_type === "pc-created" && (
+                    {element.notify_type === "pc-created" && (
                       <span className="notif-ticket">
                         {" "}
                         {element.member_name} created {"  "}
@@ -502,8 +505,7 @@ function Notification({ onclose, handleMakeZero }) {
                         {/* {element.ticket_sequence_id}.{" "} */}
                       </span>
                     )}
-                     {element.notify_type ===
-                      "prod-change-version-template" && (
+                    {element.notify_type === "prod-change-version-template" && (
                       <span className="notif-ticket">
                         {" "}
                         {element.member_name} updated {"  "}

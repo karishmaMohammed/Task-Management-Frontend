@@ -24,6 +24,7 @@ const DateContainer = ({ tasks, onUpdateDueDate }) => {
 
   return (
     <div className="calendar-container">
+        <span>Due Date</span>
       <Calendar
         onChange={handleDateChange}
         value={date}

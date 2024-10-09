@@ -9,6 +9,8 @@ import Tasks from "./Components/Tasks/Tasks";
 import TaskForm from "./Components/TaskManagement/TaskForm";
 import SideNavigator from "./Components/SideNavigator/SideNavigator";
 import SideBarAndNav from "./Components/SideBarAndNav";
+import ActivityLogChangePopUp from "./Components/TaskManagement/ActivityLogChangePopUp";
+import TaskDetailsPage from "./Components/TaskManagement/TaskDetailsPage";
 
 function App() {
   return (
@@ -35,7 +37,20 @@ function App() {
             }
           />
           <Route path="/side-nav" element={<SideNavigator />} />
-          <Route path="/task-form" element={<TaskForm />} />
+          <Route path="/activity" element={<ActivityLogChangePopUp />} />
+          <Route path="/task-details" element={
+             <SideBarAndNav>
+             <TaskDetailsPage />
+           </SideBarAndNav>
+            } />
+          <Route
+            path="/task-form"
+            element={
+              <SideBarAndNav>
+                <TaskForm />
+              </SideBarAndNav>
+            }
+          />
           <Route
             path="/home"
             element={
