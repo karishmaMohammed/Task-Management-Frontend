@@ -8,7 +8,7 @@ import RegisterAndLogin from "../OnBoarding/RegisterAndLogin";
 
 
 
-function NavBar({ children }) {
+function NavBar({ children}) {
   const [mode, setMode] = useState(false);
   const [logInSignupPopUp, setLogInSignupPopUp] = useState(false);
   const [action, setAction] = useState("");

@@ -1,5 +1,12 @@
-export const OPEN_POPUP = 'OPEN_POPUP';
-export const CLOSE_POPUP = 'CLOSE_POPUP';
+// actionTypes.js
+export const TOGGLE_ACTIVITY_POPUP = 'TOGGLE_ACTIVITY_POPUP';
+export const TOGGLE_NOTIFICATION_POPUP = 'TOGGLE_NOTIFICATION_POPUP';
+export const SETTINGS_POPUP = 'SETTINGS_POPUP';
+
+
+export const UPDATE_PROFILE = 'UPDATE_PROFILE';
+export const GET_PROFILE_INFO = 'GET_PROFILE_INFO';
+export const PROFILE_ERROR = 'PROFILE_ERROR';
 
 
 // actionTypes.js

@@ -104,6 +104,14 @@
   border: none;
   cursor: pointer;
 }
+.save, .cancel{
+  padding: 5px;
+  width: 80px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+}
+
 .save-btn {
   border: 2px solid #00ff9c;
   background: #d4fac3;

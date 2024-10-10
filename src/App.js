@@ -12,6 +12,8 @@ import SideNavigator from "./Components/SideNavigator/SideNavigator";
 import SideBarAndNav from "./Components/SideBarAndNav";
 import ActivityLogChangePopUp from "./Components/TaskManagement/ActivityLogChangePopUp";
 import TaskDetailsPage from "./Components/TaskManagement/TaskDetailsPage";
+import ActivitySideOpen from "./Components/TaskManagement/ActivitySideOpen";
+import SettingsPage from "./Components/Settings/SettingsPage";
 
 
 function App() {
@@ -25,6 +27,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LoggedInNavPage />} />
+          <Route path="/setting" element={<SettingsPage />} />
+         
           <Route
             path="/signup"
             element={<RegisterAndLogin type="register" />}

@@ -5,7 +5,7 @@ import SideNavigator from './SideNavigator/SideNavigator'
 
 function SideBarAndNav({children, setClosePopUp, closePopUp }) {
   
-  const handleTogglePopUp = (e)=>{
+  const handleActivityPopUpTogglePopUp = (e)=>{
     e.stopPropagation()
     setClosePopUp((prev)=> prev)
   }

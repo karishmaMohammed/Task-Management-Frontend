@@ -1,22 +1,30 @@
 // popupReducer.js
-import { OPEN_POPUP, CLOSE_POPUP } from '../actionTypes';
+import { TOGGLE_ACTIVITY_POPUP, TOGGLE_NOTIFICATION_POPUP, SETTINGS_POPUP } from '../actionTypes';
+
 
 const initialState = {
-  isPopupOpen: false,
+  isActivityPopUpOpen: false,
+  isNotificationPopUpOpen: false,
+  isSettingPopUpOpen : false,
 };
 
 const popupReducer = (state = initialState, action) => {
   switch (action.type) {
-    case OPEN_POPUP:
+    case TOGGLE_ACTIVITY_POPUP:
       return {
         ...state,
-        isPopupOpen: true,
+        isActivityPopUpOpen: !state.isActivityPopUpOpen,  // Toggle the current state
       };
-    case CLOSE_POPUP:
-      return {
-        ...state,
-        isPopupOpen: false,
-      };
+      case TOGGLE_NOTIFICATION_POPUP:
+        return {
+          ...state,
+          isNotificationPopUpOpen: !state.isNotificationPopUpOpen,
+        }
+        case SETTINGS_POPUP:
+          return{
+            ...state,
+            isSettingPopUpOpen: !state.isSettingPopUpOpen,
+          }
     default:
       return state;
   }

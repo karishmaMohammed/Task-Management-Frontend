@@ -6,6 +6,7 @@ import { CgAdd } from "react-icons/cg";
 import { MdDelete } from "react-icons/md";
 import DateContainer from "./DateContainer";
 import ActivitySideOpen from "./ActivitySideOpen";
+import { usePopup } from "../../helpers/PopUpHelper";
 
 const statusOptions = [
   { value: "todo", label: "To Do", color: "#FF8A80" },
@@ -52,12 +53,14 @@ const customSingleValue = ({ data }) => (
   </div>
 );
 function TaskDetailsPage() {
+  const { isActivityPopUpOpen, handleActivityPopUpToggle } = usePopup();
+
   const [isEditing, setIsEditing] = useState({
     title: false,
     priority: false,
     description: false,
   });
-const [activityLogs, setActivityLogs] = useState(false);
+  // const [activityLogs, setActivityLogs] = useState(false);
   const [fields, setFields] = useState({
     title: "Default Title",
     priority: "High",
@@ -225,337 +228,351 @@ const [activityLogs, setActivityLogs] = useState(false);
   };
   return (
     <>
-     <div
-      className="details-page"
-      style={{ marginTop: "2.5%", marginLeft: "12%", padding: "24px" }}
-    >
-      <div className="details-left">
-        {/* Title Field */}
-        <div className="details-field-title">
-          {isEditing.title ? (
-            <div>
-              <textarea
-                type="text"
-                name="title"
-                value={fields.title}
-                onChange={handleChange}
-              />
-              <button
-                onClick={() => {
-                  setFields(fields);
-                  setIsEditing((prev) => ({ ...prev, title: false }));
-                }}
-              >
-                Save
-              </button>
-              <button onClick={() => handleCancel("title")}>Cancel</button>
-            </div>
-          ) : (
-            <div className="details-value-title">
-              <div style={{ maxWidth: "95%" }}>{fields.title}</div>
-              <FaEdit
-                className="edit-icon"
-                style={{ width: "20px", height: "20px" }}
-                onClick={() => handleEditClick("title")}
-              />
-            </div>
-          )}
-        </div>
-
-        <div className="details-field-details-div">
-          <div className="details-field-details-div-left">
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <div className="details-field-priority">
-                <div className="details-label-priority">Priority</div>
-
-                {/* Display the priority value and change color on toggle */}
-
-                {/* Priority Color Box */}
-                <div
-                  className="priority-color"
-                  style={{
-                    backgroundColor: priorityColors[Priorityfields.priority], // Set the color based on priority
-                    cursor: "pointer",
+      <div
+        className="details-page"
+        style={{ marginTop: "2.5%", marginLeft: "12%", padding: "24px" }}
+      >
+        <div className="details-left">
+          {/* Title Field */}
+          <div className="details-field-title">
+            {isEditing.title ? (
+              <div>
+                <textarea
+                  type="text"
+                  name="title"
+                  value={fields.title}
+                  onChange={handleChange}
+                />
+                <button
+                  className="save-btn save"
+                  onClick={() => {
+                    setFields(fields);
+                    setIsEditing((prev) => ({ ...prev, title: false }));
                   }}
-                  onClick={togglePriority} // Toggle priority on click
+                >
+                  Save
+                </button>
+                &nbsp;&nbsp;&nbsp;
+                <button
+                  className="cancel-btn cancel"
+                  onClick={() => handleCancel("title")}
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div className="details-value-title">
+                <div style={{ maxWidth: "95%" }}>{fields.title}</div>
+                <FaEdit
+                  className="edit-icon"
+                  style={{ width: "20px", height: "20px" }}
+                  onClick={() => handleEditClick("title")}
                 />
               </div>
+            )}
+          </div>
+
+          <div className="details-field-details-div">
+            <div className="details-field-details-div-left">
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "10px",
-                  marginRight: "10px",
+                  justifyContent: "space-between",
                 }}
               >
-                <span>Status</span>
-                <Select
-                  value={selectedOption}
-                  onChange={handleStatusChange}
-                  options={statusOptions.map((member) => ({
-                    value: member.value, // Use full name as the value
-                    label: (
-                      <div
-                        className="member-option"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "10px",
-                        }}
-                      >
-                        <div
-                          style={{
-                            background: member.color,
-                            width: "10px",
-                            height: "10px",
-                            borderRadius: "50%",
-                          }}
-                        ></div>
-                        <span>{member.label}</span>
-                      </div>
-                    ),
-                  }))}
-                  // options={statusOptions}
-                  // components={{ Option: customOption, SingleValue: customSingleValue }} // Use custom components
-                  styles={customStyles}
-                />
-              </div>
-            </div>
+                <div className="details-field-priority">
+                  <div className="details-label-priority">Priority</div>
 
-            {/* Description Field */}
-            <div
-              className="details-field"
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-            >
-              {isEditing.description ? (
-                <div>
-                  <textarea
-                    style={{ width: "80%" }}
-                    name="description"
-                    value={fields.description}
-                    onChange={handleChange}
-                  />
-                  <br />
-                  <button
-                    onClick={() => {
-                      setFields(fields);
-                      setIsEditing((prev) => ({ ...prev, description: false }));
+                  {/* Display the priority value and change color on toggle */}
+
+                  {/* Priority Color Box */}
+                  <div
+                    className="priority-color"
+                    style={{
+                      backgroundColor: priorityColors[Priorityfields.priority], // Set the color based on priority
+                      cursor: "pointer",
                     }}
-                  >
-                    Save
-                  </button>
-                  <button onClick={() => handleCancel("description")}>
-                    Cancel
-                  </button>
+                    onClick={togglePriority} // Toggle priority on click
+                  />
                 </div>
-              ) : (
                 <div
-                  className="details-value"
                   style={{
                     display: "flex",
                     alignItems: "center",
                     gap: "10px",
-                    width: "75%",
+                    marginRight: "10px",
                   }}
                 >
-                  {/* <textarea disabled value={fields.description} style={{display:'flex',alignItems:'center',gap:'10px',width:'90%'}}/> */}
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "10px",
-                      width: "100%",
-                      maxHeight: "15vh",
-                      overflowY: "scroll",
-                    }}
-                  >
-                    {fields.description}
-                  </div>
-                  <FaEdit
-                    className="edit-icon"
-                    onClick={() => handleEditClick("description")}
+                  <span>Status</span>
+                  <Select
+                    value={selectedOption}
+                    onChange={handleStatusChange}
+                    options={statusOptions.map((member) => ({
+                      value: member.value, // Use full name as the value
+                      label: (
+                        <div
+                          className="member-option"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                          }}
+                        >
+                          <div
+                            style={{
+                              background: member.color,
+                              width: "10px",
+                              height: "10px",
+                              borderRadius: "50%",
+                            }}
+                          ></div>
+                          <span>{member.label}</span>
+                        </div>
+                      ),
+                    }))}
+                    // options={statusOptions}
+                    // components={{ Option: customOption, SingleValue: customSingleValue }} // Use custom components
+                    styles={customStyles}
                   />
                 </div>
-              )}
+              </div>
+
+              {/* Description Field */}
+              <div
+                className="details-field"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
+                {isEditing.description ? (
+                  <div>
+                    <textarea
+                      style={{ width: "80%" }}
+                      name="description"
+                      value={fields.description}
+                      onChange={handleChange}
+                    />
+                    <br />
+                    <button
+                      onClick={() => {
+                        setFields(fields);
+                        setIsEditing((prev) => ({
+                          ...prev,
+                          description: false,
+                        }));
+                      }}
+                    >
+                      Save
+                    </button>
+                    <button onClick={() => handleCancel("description")}>
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    className="details-value"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      width: "75%",
+                    }}
+                  >
+                    {/* <textarea disabled value={fields.description} style={{display:'flex',alignItems:'center',gap:'10px',width:'90%'}}/> */}
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "10px",
+                        width: "100%",
+                        maxHeight: "15vh",
+                        overflowY: "scroll",
+                      }}
+                    >
+                      {fields.description}
+                    </div>
+                    <FaEdit
+                      className="edit-icon"
+                      onClick={() => handleEditClick("description")}
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="sub-tasks">
+                <div className="sub-tasks-head">
+                  <span>Sub tasks</span>
+                  <CgAdd className="sub-tasks-add" />
+                </div>
+                <div className="sub-tasks-rows">
+                  <div className="sub-tasks-rows-cont">
+                    <span>title</span>
+                    <span>due date</span>
+                    <span>priority</span>
+                  </div>
+                  <div className="sub-tasks-rows-cont">
+                    <span>title</span>
+                    <span>due date</span>
+                    <span>priority</span>
+                  </div>
+                  <div className="sub-tasks-rows-cont">
+                    <span>title</span>
+                    <span>due date</span>
+                    <span>priority</span>
+                  </div>
+                  <div className="sub-tasks-rows-cont">
+                    <span>title</span>
+                    <span>due date</span>
+                    <span>priority</span>
+                  </div>
+                  <div className="sub-tasks-rows-cont">
+                    <span>title</span>
+                    <span>due date</span>
+                    <span>priority</span>
+                  </div>
+                  <div className="sub-tasks-rows-cont">
+                    <span>title</span>
+                    <span>due date</span>
+                    <span>priority</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="sub-tasks">
-              <div className="sub-tasks-head">
-                <span>Sub tasks</span>
-                <CgAdd className="sub-tasks-add" />
-              </div>
-              <div className="sub-tasks-rows">
-                <div className="sub-tasks-rows-cont">
-                  <span>title</span>
-                  <span>due date</span>
-                  <span>priority</span>
-                </div>
-                <div className="sub-tasks-rows-cont">
-                  <span>title</span>
-                  <span>due date</span>
-                  <span>priority</span>
-                </div>
-                <div className="sub-tasks-rows-cont">
-                  <span>title</span>
-                  <span>due date</span>
-                  <span>priority</span>
-                </div>
-                <div className="sub-tasks-rows-cont">
-                  <span>title</span>
-                  <span>due date</span>
-                  <span>priority</span>
-                </div>
-                <div className="sub-tasks-rows-cont">
-                  <span>title</span>
-                  <span>due date</span>
-                  <span>priority</span>
-                </div>
-                <div className="sub-tasks-rows-cont">
-                  <span>title</span>
-                  <span>due date</span>
-                  <span>priority</span>
-                </div>
-              </div>
+            <div className="details-field-details-div-right">
+              <DateContainer
+                tasks={tasks}
+                onUpdateDueDate={handleUpdateDueDate}
+              />
             </div>
           </div>
-          <div className="details-field-details-div-right">
-            <DateContainer
-              tasks={tasks}
-              onUpdateDueDate={handleUpdateDueDate}
+
+          {/* Comments Section */}
+          <span style={{ color: "#257180", fontSize: "20px" }}> Comments</span>
+          <div className="details-field-comments">
+            <div className="details-field-comments-cont">
+              <span>
+                dnfhjdgdfghdfghjdfghdfhgdhdfghjdfghdfhgdhfgdhfg
+                dnfhjdgdfghdfghjdfghdfhgdhfgdhfg
+              </span>
+              <MdDelete />
+            </div>
+            <div className="details-field-comments-cont">
+              <span>
+                dnfhjdgdfghdfghjdfghdfhgdhdfghjdfghdfhgdhfgdhfg
+                dnfhjdgdfghdfghjdfghdfhgdhfgdhfg
+              </span>
+              <MdDelete />
+            </div>
+            <div className="details-field-comments-cont">
+              <span>
+                dnfhjdgdfghdfghjdfghdfhgdhdfghjdfghdfhgdhfgdhfg
+                dnfhjdgdfghdfghjdfghdfhgdhfgdhfg
+              </span>
+              <MdDelete />
+            </div>
+            <div className="details-field-comments-cont">
+              <span>
+                dnfhjdgdfghdfghjdfghdfhgdhdfghjdfghdfhgdhfgdhfg
+                dnfhjdgdfghdfghjdfghdfhgdhfgdhfg
+              </span>
+              <MdDelete />
+            </div>
+            <div className="details-field-comments-cont">
+              <span>
+                dnfhjdgdfghdfghjdfghdfhgdhfgdhfgdnfhjdgdfghdfghjdfghdfhgdhfgdhfgdnfhjdgdfghdfghjdfghdfhgdhfgdhfgdnfhjdgdfghdfghjdfghdfhgdhfgdhfg
+                dnfhjdgdfghdfghjdfghdfhgdhfgdhfg
+              </span>
+              <MdDelete />
+            </div>
+            <div className="details-field-comments-cont">
+              <span>
+                dnfhjdgdfghdfghjdfghdfhgdhfgdhfgdnfhjdgdfghdfghjdfghdfhgdhfgdhfgdnfhjdgdfghdfghjdfghdfhgdhfgdhfgdnfhjdgdfghdfghjdfghdfhgdhfgdhfg
+                dnfhjdgdfghdfghjdfghdfhgdhfgdhfg
+              </span>
+              <MdDelete />
+            </div>
+            {/* https://www.freepik.com/icon/time-management_562182#fromView=search&page=3&position=2&uuid=c795b95a-c669-477c-8978-1e6d960dbea6 */}
+          </div>
+        </div>
+        <div className="details-right-cont">
+          <div className="details-right-cont-top">
+            <img
+              onClick={handleActivityPopUpToggle}
+              title="Activity logs"
+              src="https://cdn-icons-png.freepik.com/256/562/562182.png?ga=GA1.2.1462843302.1696500966&semt=ais_hybrid"
+              alt=""
             />
           </div>
-        </div>
-
-        {/* Comments Section */}
-        <span style={{ color: "#257180", fontSize: "20px" }}> Comments</span>
-        <div className="details-field-comments">
-         
-          <div className="details-field-comments-cont">
-            <span>
-              dnfhjdgdfghdfghjdfghdfhgdhdfghjdfghdfhgdhfgdhfg
-              dnfhjdgdfghdfghjdfghdfhgdhfgdhfg
-            </span>
-            <MdDelete />
-          </div>
-          <div className="details-field-comments-cont">
-            <span>
-              dnfhjdgdfghdfghjdfghdfhgdhdfghjdfghdfhgdhfgdhfg
-              dnfhjdgdfghdfghjdfghdfhgdhfgdhfg
-            </span>
-            <MdDelete />
-          </div>
-          <div className="details-field-comments-cont">
-            <span>
-              dnfhjdgdfghdfghjdfghdfhgdhdfghjdfghdfhgdhfgdhfg
-              dnfhjdgdfghdfghjdfghdfhgdhfgdhfg
-            </span>
-            <MdDelete />
-          </div>
-          <div className="details-field-comments-cont">
-            <span>
-              dnfhjdgdfghdfghjdfghdfhgdhdfghjdfghdfhgdhfgdhfg
-              dnfhjdgdfghdfghjdfghdfhgdhfgdhfg
-            </span>
-            <MdDelete />
-          </div>
-          <div className="details-field-comments-cont">
-            <span>
-              dnfhjdgdfghdfghjdfghdfhgdhfgdhfgdnfhjdgdfghdfghjdfghdfhgdhfgdhfgdnfhjdgdfghdfghjdfghdfhgdhfgdhfgdnfhjdgdfghdfghjdfghdfhgdhfgdhfg
-              dnfhjdgdfghdfghjdfghdfhgdhfgdhfg
-            </span>
-            <MdDelete />
-          </div>
-          <div className="details-field-comments-cont">
-            <span>
-              dnfhjdgdfghdfghjdfghdfhgdhfgdhfgdnfhjdgdfghdfghjdfghdfhgdhfgdhfgdnfhjdgdfghdfghjdfghdfhgdhfgdhfgdnfhjdgdfghdfghjdfghdfhgdhfgdhfg
-              dnfhjdgdfghdfghjdfghdfhgdhfgdhfg
-            </span>
-            <MdDelete />
-          </div>
-          {/* https://www.freepik.com/icon/time-management_562182#fromView=search&page=3&position=2&uuid=c795b95a-c669-477c-8978-1e6d960dbea6 */}
-        </div>
-      </div>
-      <div className="details-right-cont">
-        <div className="details-right-cont-top">
-          <img
-          onClick={() => setActivityLogs((prev) => !prev)}
-            title="Activity logs"
-            src="https://cdn-icons-png.freepik.com/256/562/562182.png?ga=GA1.2.1462843302.1696500966&semt=ais_hybrid"
-            alt=""
-          />
-        </div>
-        <div className="details-right">
-          <div className="details-right-top">
-            <span style={{ color: "#257180", fontSize: "28px" }}>Dropped Fields</span>
-          </div>
-          <div className="details-right-bottom">
-            {/* Render input fields dynamically based on their type and is_default property */}
-            {droppedFields.map((field) =>
-              !field.is_default ? (
-                <div className="details-right-row" key={field.name}>
-                  <span>{field.name}</span>
-                  {isFieldEditing[field.name] ? (
-                    <div
-                      className="details-right-edit-row"
-                      style={{ width: "100%" }}
-                    >
-                      {field.type === "text" && (
-                        <input
-                          className="details-right-input"
-                          type="text"
-                          value={fieldsValues[field.name]}
-                          onChange={(e) => handleCustomChange(e, field.name)}
+          <div className="details-right">
+            <div className="details-right-top">
+              <span style={{ color: "#257180", fontSize: "28px" }}>
+                Dropped Fields
+              </span>
+            </div>
+            <div className="details-right-bottom">
+              {/* Render input fields dynamically based on their type and is_default property */}
+              {droppedFields.map((field) =>
+                !field.is_default ? (
+                  <div className="details-right-row" key={field.name}>
+                    <span>{field.name}</span>
+                    {isFieldEditing[field.name] ? (
+                      <div
+                        className="details-right-edit-row"
+                        style={{ width: "100%" }}
+                      >
+                        {field.type === "text" && (
+                          <input
+                            className="details-right-input"
+                            type="text"
+                            value={fieldsValues[field.name]}
+                            onChange={(e) => handleCustomChange(e, field.name)}
+                          />
+                        )}
+                        {field.type === "link" && (
+                          <input
+                            className="details-right-input"
+                            type="url"
+                            value={fieldsValues[field.name]}
+                            placeholder="Enter URL"
+                            onChange={(e) => handleCustomChange(e, field.name)}
+                          />
+                        )}
+                        {field.type === "number" && (
+                          <input
+                            className="details-right-input"
+                            type="number"
+                            value={fieldsValues[field.name]}
+                            onChange={(e) => handleCustomChange(e, field.name)}
+                          />
+                        )}
+                        <br />
+                        {/* Save and Cancel Buttons */}
+                        <button onClick={() => handleSaveField(field.name)}>
+                          Save
+                        </button>
+                        <button onClick={() => handleCancelField(field.name)}>
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="details-right-display-row">
+                        {fieldsValues[field.name]}
+                        <FaEdit
+                          className="edit-icon"
+                          onClick={() => handleEditField(field.name)}
                         />
-                      )}
-                      {field.type === "link" && (
-                        <input
-                          className="details-right-input"
-                          type="url"
-                          value={fieldsValues[field.name]}
-                          placeholder="Enter URL"
-                          onChange={(e) => handleCustomChange(e, field.name)}
-                        />
-                      )}
-                      {field.type === "number" && (
-                        <input
-                          className="details-right-input"
-                          type="number"
-                          value={fieldsValues[field.name]}
-                          onChange={(e) => handleCustomChange(e, field.name)}
-                        />
-                      )}
-                      <br />
-                      {/* Save and Cancel Buttons */}
-                      <button onClick={() => handleSaveField(field.name)}>
-                        Save
-                      </button>
-                      <button onClick={() => handleCancelField(field.name)}>
-                        Cancel
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="details-right-display-row">
-                      {fieldsValues[field.name]}
-                      <FaEdit
-                        className="edit-icon"
-                        onClick={() => handleEditField(field.name)}
-                      />
-                    </div>
-                  )}
-                </div>
-              ) : null
-            )}
+                      </div>
+                    )}
+                  </div>
+                ) : null
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    { activityLogs && <ActivitySideOpen shutDown={() => setActivityLogs((prev) => !prev)}/>}
+      {isActivityPopUpOpen && <ActivitySideOpen />}
     </>
-   
   );
 }
 

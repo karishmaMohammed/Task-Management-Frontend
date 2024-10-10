@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import "./HomePage.css";
 import Notification from "../Notification/Notification";
-import Settings from "../Settings/Settings";
+import { usePopup } from "../../helpers/PopUpHelper";
+import SettingsPopUp from "../Settings/SettingsPopUp";
 
 function LoggedInNavPage() {
-  const [openNotiofications, setOpenNotifications] = useState(false);
+  const { isNotificationPopUpOpen, handleNotificationPopUpToggle, 
+    isSettingPopUpOpen, handleSettingPopUpToggle
+  } = usePopup();
+
+  // const [openNotiofications, setOpenNotifications] = useState(false);
   const [notificationCount, setNotificationCount] = useState("");
   const handleMakeZero = () => {
     setNotificationCount(0);
@@ -19,33 +24,33 @@ function LoggedInNavPage() {
             alt=""
           /> */}
           <img
-            onClick={() => setOpenNotifications(!openNotiofications)}
+            onClick={handleNotificationPopUpToggle}
             src="https://cdn-icons-png.freepik.com/256/1156/1156949.png?ga=GA1.1.706441703.1694584519&semt=ais_hybrid"
             alt="notification"
           />
           <img
+           onClick={handleSettingPopUpToggle}
             src="https://icon-library.com/images/username-icon-png/username-icon-png-19.jpg"
             alt=""
           />
 
           {/* FEMALE USER LOGO AFTER LOGIN 
  https://cdn-icons-png.freepik.com/256/3984/3984678.png?ga=GA1.1.706441703.1694584519&semt=ais_hybrid
+
 */}
 
-{/* MALE USER LOGO AFTER LOGIN
+          {/* MALE USER LOGO AFTER LOGIN
 https://cdn-icons-png.freepik.com/256/11044/11044904.png?ga=GA1.1.706441703.1694584519&semt=ais_hybrid
 */}
           {/* <button>Signup</button>
                 <button>Login</button> */}
         </div>
       </div>
-      {openNotiofications && (
-        <Notification
-          onclose={() => setOpenNotifications(!openNotiofications)}
-          handleMakeZero={handleMakeZero}
-        />
-      )}
-      <Settings memberPhoto= '' memberName ='karishma' memberEmail='mohammed'onClose={false}/>
+      {isNotificationPopUpOpen && <Notification />}
+      { isSettingPopUpOpen && 
+      <SettingsPopUp memberPhoto= '' memberName ='karishma' memberEmail='mohammed'/>
+      }
+      
     </>
   );
 }

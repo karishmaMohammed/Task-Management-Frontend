@@ -18,7 +18,7 @@ function EditDetails({ type}) {
    
     const toastStyle = {
         position: "top-right",
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: false,
         pauseOnHover: true,
         draggable: true,

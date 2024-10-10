@@ -6,9 +6,12 @@ import axios from "axios";
 import "./Notification.css";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate } from "react-router-dom";
+import { usePopup } from "../../helpers/PopUpHelper";
 
 const LIMIT = 20;
-function Notification({ onclose, handleMakeZero }) {
+function Notification() {
+  const { isNotificationPopUpOpen, handleNotificationPopUpToggle } = usePopup();
+
   const [activeElement, setActiveElement] = useState("notif-all");
   const [unReadNotification, setUnReadNotifications] = useState([]);
   const [allNotification, setAllNotifications] = useState([]);
@@ -91,7 +94,7 @@ function Notification({ onclose, handleMakeZero }) {
   };
   const handleMarkRead = () => {
     markAllAsRead();
-    handleMakeZero();
+    // handleMakeZero();
     // getUnreadNotifications();
   };
   const formatTimeAgo = (timestamp) => {
@@ -157,12 +160,9 @@ function Notification({ onclose, handleMakeZero }) {
       getReadNotifications();
       // window.location.pathname=`/ticket-view/${ticketId}/?notify=${id}`
       // nav(`/ticket-view/${ticketId}/?notify=${id}`, { replace: true });
-      if (
-        notify_types === "create-task" 
-        
-      ) {
+      if (notify_types === "create-task") {
         nav(`/org-home/?notify=${id}`, { replace: true });
-      } 
+      }
       onclose();
     } catch (error) {
       console.log(error);
@@ -189,121 +189,117 @@ function Notification({ onclose, handleMakeZero }) {
   };
 
   return (
-    <div className="notification-page">
-      <div className="notification-div">
-        <div className="notif-top">
-          <div className="notification-title">
-            {/* <img src={`${ASSET_PREFIX_URL}bell_icon.png`} alt="" /> */}
-            <span style={{ color: "#257180", fontSize: "24px" }}>
-              Notifications
-            </span>
-            {/* <img
-              onClick={() => handleReload()}
-            //   src={`${ASSET_PREFIX_URL}refresh_2805355.png`}
-              title="refresh"
-              alt=""
-              style={{ cursor: "pointer" }}
-            /> */}
-          </div>
-
-          <div className="notification-close-btn">
-            <CloseIcon onClick={handleClose} />
-          </div>
-        </div>
-
-        <div className="notification-all-unread">
-          <div
-            className={`notif-all ${
-              activeElement === "notif-all" ? "border-highlight" : ""
-            }`}
-            onClick={() => setActiveElement("notif-all")}
-          >
-            <span>All</span>
-          </div>
-          <div
-            className={`notif-unread ${
-              activeElement === "notif-unread" ? "border-highlight" : ""
-            }`}
-            onClick={() => {
-              setActiveElement("notif-unread");
-              // Reset page when switching to unread notifications
-            }}
-          >
-            <span>
-              Unread ({allUnreadNotification ? allUnreadNotification : 0})
-            </span>
-          </div>
-        </div>
-        <div className="mark-read">
-          <span onClick={handleMarkRead}>Mark all as read</span>
-        </div>
-        <div
-          className="notifications"
-          onScroll={handleScroll}
-          ref={containerRef}
-        >
-          <InfiniteScroll
-            dataLength={notificationsToDisplay.length}
-            next={() => handleNextFunction()}
-            hasMore={notificationsToDisplay.length < notificationsCount}
-            loader={
-              <div className="loading-indicator" style={{ color: "black" }}>
-                <h4>Loading...</h4>
+    <>
+      {isNotificationPopUpOpen && (
+        <div className="notification-page">
+          <div className="notification-div">
+            <div className="notif-top">
+              <div className="notification-title">
+                {/* <img src={`${ASSET_PREFIX_URL}bell_icon.png`} alt="" /> */}
+                <span style={{ color: "#257180", fontSize: "24px" }}>
+                  Notifications
+                </span>
+                {/* <img
+               onClick={() => handleReload()}
+             //   src={`${ASSET_PREFIX_URL}refresh_2805355.png`}
+               title="refresh"
+               alt=""
+               style={{ cursor: "pointer" }}
+             /> */}
               </div>
-            }
-            // endMessage={
-            //   <p style={{ textAlign: "center", marginTop: "10px" }}>
-            //     <b>Yay! You have seen it all</b>
-            //   </p>
-            // }
-          >
-            {notificationsToDisplay.map((element, index) => (
+
+              <div className="notification-close-btn">
+                <CloseIcon onClick={handleNotificationPopUpToggle} />
+              </div>
+            </div>
+
+            <div className="notification-all-unread">
               <div
-                key={index}
-                className="notified-box"
-                onClick={() =>
-                  handleNotificationClick(
-                    element._id,
-                    element.ticket_sequence_id,
-                    element.notify_type
-                  )
-                }
+                className={`notif-all ${
+                  activeElement === "notif-all" ? "border-highlight" : ""
+                }`}
+                onClick={() => setActiveElement("notif-all")}
               >
-               
-
-              
-                <img
-                  width="35px"
-                  height="35px"
-                  src="https://marathon-web-assets.s3.ap-south-1.amazonaws.com/Add+action-d3.svg"
-                />
-
-                <div className="notif-content">
-                  <div className="notifi-desc">
-                    
-
-                    {element.notify_type === "create-task" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} added a comment in{" "}
-                        {element.ticket_sequence_id}.{" "}
-                      </span>
-                    )}
-                    
-                    <span className="notify-time">
-                      {formatTimeAgo(element.createdAt)}
-                    </span>
-                  </div>
-                  
-                </div>
+                <span>All</span>
               </div>
-            ))}
-          </InfiniteScroll>
+              <div
+                className={`notif-unread ${
+                  activeElement === "notif-unread" ? "border-highlight" : ""
+                }`}
+                onClick={() => {
+                  setActiveElement("notif-unread");
+                  // Reset page when switching to unread notifications
+                }}
+              >
+                <span>
+                  Unread ({allUnreadNotification ? allUnreadNotification : 0})
+                </span>
+              </div>
+            </div>
+            <div className="mark-read">
+              <span onClick={handleMarkRead}>Mark all as read</span>
+            </div>
+            <div
+              className="notifications"
+              onScroll={handleScroll}
+              ref={containerRef}
+            >
+              <InfiniteScroll
+                dataLength={notificationsToDisplay.length}
+                next={() => handleNextFunction()}
+                hasMore={notificationsToDisplay.length < notificationsCount}
+                loader={
+                  <div className="loading-indicator" style={{ color: "black" }}>
+                    <h4>Loading...</h4>
+                  </div>
+                }
+                // endMessage={
+                //   <p style={{ textAlign: "center", marginTop: "10px" }}>
+                //     <b>Yay! You have seen it all</b>
+                //   </p>
+                // }
+              >
+                {notificationsToDisplay.map((element, index) => (
+                  <div
+                    key={index}
+                    className="notified-box"
+                    onClick={() =>
+                      handleNotificationClick(
+                        element._id,
+                        element.ticket_sequence_id,
+                        element.notify_type
+                      )
+                    }
+                  >
+                    <img
+                      width="35px"
+                      height="35px"
+                      src="https://marathon-web-assets.s3.ap-south-1.amazonaws.com/Add+action-d3.svg"
+                    />
 
-          
+                    <div className="notif-content">
+                      <div className="notifi-desc">
+                        {element.notify_type === "create-task" && (
+                          <span className="notif-ticket">
+                            {" "}
+                            {element.member_name} added a comment in{" "}
+                            {element.ticket_sequence_id}.{" "}
+                          </span>
+                        )}
+
+                        <span className="notify-time">
+                          {formatTimeAgo(element.createdAt)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </InfiniteScroll>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
 
