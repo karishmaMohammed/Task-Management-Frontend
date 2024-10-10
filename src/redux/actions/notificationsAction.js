@@ -19,7 +19,7 @@ export const getNotifications = () => async (dispatch) => {
       dispatch({ type: GET_NOTIFICATION_REQUEST });
   
       const headers = {
-        "x-auth-token": Cookies.get("user_token"),
+        "task-auth-token": Cookies.get("user_task_token"),
       };
   
       const response = await axios.get(
@@ -46,7 +46,7 @@ export const markNotificationsRead = () => async (dispatch) => {
       dispatch({ type: MARK_READ_NOTIFICATION_REQUEST });
   
       const headers = {
-        "x-auth-token": Cookies.get("user_token"),
+        "task-auth-token": Cookies.get("user_task_token"),
       };
   
       const response = await axios.get(BASE_URL + "/notification/mark-read", {
@@ -71,7 +71,7 @@ export const getTaskActivityLogs = () => async (dispatch) => {
       dispatch({ type: GET_ACTIVITY_LOGS_REQUEST });
   
       const headers = {
-        "x-auth-token": Cookies.get("user_token"),
+        "task-auth-token": Cookies.get("user_task_token"),
       };
   
       const response = await axios.get(

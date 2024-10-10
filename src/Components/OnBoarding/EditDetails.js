@@ -34,7 +34,7 @@ function EditDetails({ type}) {
     const memberDetails = async(action) => {
         try {
             const headers = {
-                "x-auth-token": Cookies.get('user_token'),
+                "task-auth-token": Cookies.get('user_task_token'),
               };
               const memberDetails = await axios.post(
                 BASE_URL + "/member/edit-details",
@@ -56,7 +56,7 @@ function EditDetails({ type}) {
         try {
             if (type === 'edit') {
                 const headers = {
-                    "x-auth-token": Cookies.get('user_token'),
+                    "task-auth-token": Cookies.get('user_task_token'),
                   };
                   const profileData = {
                     name : formData.name,
@@ -75,7 +75,7 @@ function EditDetails({ type}) {
                 console.log('member details edited', editDetails);
             } else if(type === 'password') {
                 const headers = {
-                    "x-auth-token": Cookies.get('user_token'),
+                    "task-auth-token": Cookies.get('user_task_token'),
                   };
                   const passwordData = {
                     oldPassword : formData.oldPassword,

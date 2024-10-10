@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./HomePage.css";
 import Notification from "../Notification/Notification";
+import Settings from "../Settings/Settings";
 
 function LoggedInNavPage() {
   const [openNotiofications, setOpenNotifications] = useState(false);
@@ -44,6 +45,7 @@ https://cdn-icons-png.freepik.com/256/11044/11044904.png?ga=GA1.1.706441703.1694
           handleMakeZero={handleMakeZero}
         />
       )}
+      <Settings memberPhoto= '' memberName ='karishma' memberEmail='mohammed'onClose={false}/>
     </>
   );
 }

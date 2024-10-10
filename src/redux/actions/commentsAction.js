@@ -19,7 +19,7 @@ export const createComments = () => async (dispatch) => {
     dispatch({ type: CREATE_COMMENT_REQUEST });
 
     const headers = {
-      "x-auth-token": Cookies.get("user_token"),
+      "task-auth-token": Cookies.get("user_task_token"),
     };
 
     const response = await axios.post(
@@ -47,7 +47,7 @@ export const getComments = () => async (dispatch) => {
     dispatch({ type: GET_COMMENT_REQUEST });
 
     const headers = {
-      "x-auth-token": Cookies.get("user_token"),
+      "task-auth-token": Cookies.get("user_task_token"),
     };
 
     const response = await axios.get(BASE_URL + "/comment/get-comment", {
@@ -72,7 +72,7 @@ export const deleteComments = () => async (dispatch) => {
     dispatch({ type: DELETE_COMMENT_REQUEST });
 
     const headers = {
-      "x-auth-token": Cookies.get("user_token"),
+      "task-auth-token": Cookies.get("user_task_token"),
     };
 
     const response = await axios.post(

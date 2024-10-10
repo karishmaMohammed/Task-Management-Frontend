@@ -1,4 +1,5 @@
 import "./App.css";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./Components/HomePage/HomePage";
 import RegisterAndLogin from "./Components/OnBoarding/RegisterAndLogin";
@@ -12,9 +13,15 @@ import SideBarAndNav from "./Components/SideBarAndNav";
 import ActivityLogChangePopUp from "./Components/TaskManagement/ActivityLogChangePopUp";
 import TaskDetailsPage from "./Components/TaskManagement/TaskDetailsPage";
 
+
 function App() {
+  const [closePopUp, setClosePopUp] = useState(false);
+
+  const handleClosePopUp = () => {
+    setClosePopUp(false)
+  }
   return (
-    <div className="App">
+    <div className="App" onClick={handleClosePopUp}>
       <Router>
         <Routes>
           <Route path="/" element={<LoggedInNavPage />} />
@@ -54,7 +61,7 @@ function App() {
           <Route
             path="/home"
             element={
-              <NavBar>
+              <NavBar closePopUp={closePopUp} setClosePopUp={setClosePopUp}>
                 <HomePage />
               </NavBar>
             }

@@ -43,13 +43,13 @@ function RegisterAndLogin({ type, onclose, setTokenValue }) {
         {},
         {
           headers: {
-            "x-auth-token": `${token}`,
+            "task-auth-token": `${token}`,
           },
         }
       );
 
       if (response.data.meta.success) {
-        Cookies.set("user_token", token);
+        Cookies.set("user_task_token", token);
         dispatch(fetchMemberDetails());
       }
     } catch (error) {

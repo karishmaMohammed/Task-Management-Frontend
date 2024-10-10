@@ -12,7 +12,7 @@ export const fetchMemberDetails = () => async (dispatch) => {
     dispatch({ type: FETCH_MEMBER_DETAILS_REQUEST });
 
     const headers = {
-      "x-auth-token": Cookies.get("user_token"),
+      "task-auth-token": Cookies.get("user_task_token"),
     };
 
     const response = await axios.get(BASE_URL + "/member/get-member-details", {

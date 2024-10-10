@@ -23,7 +23,7 @@ function Notification({ onclose, handleMakeZero }) {
   const getReadNotifications = async () => {
     try {
       const headers = {
-        "x-auth-token": Cookies.get("token"),
+        "task-auth-token": Cookies.get("user_task_token"),
       };
 
       const response = await axios.get(
@@ -75,7 +75,7 @@ function Notification({ onclose, handleMakeZero }) {
   const markAllAsRead = async () => {
     try {
       const headers = {
-        "x-auth-token": Cookies.get("token"),
+        "task-auth-token": Cookies.get("user_task_token"),
       };
       await axios.post(
         `${BASE_URL}/notification/mark-read`,
@@ -147,7 +147,7 @@ function Notification({ onclose, handleMakeZero }) {
     // console.log('Clicked on notification with id:', ticketId);
     try {
       const headers = {
-        "x-auth-token": Cookies.get("token"),
+        "task-auth-token": Cookies.get("user_task_token"),
       };
       await axios.post(
         `${BASE_URL}/v1/notification/mark-all-read`,
@@ -158,51 +158,11 @@ function Notification({ onclose, handleMakeZero }) {
       // window.location.pathname=`/ticket-view/${ticketId}/?notify=${id}`
       // nav(`/ticket-view/${ticketId}/?notify=${id}`, { replace: true });
       if (
-        notify_types === "change-manager" ||
-        notify_types === "department-updated" ||
-        notify_types === "department created" ||
-        notify_types === "member-removed"
+        notify_types === "create-task" 
+        
       ) {
         nav(`/org-home/?notify=${id}`, { replace: true });
-      } else if (
-        notify_types === "create-template" ||
-        notify_types === "version-template"
-      ) {
-        nav(`/template/?notify=${id}`, { replace: true });
-      } else if (
-        notify_types === "ec-create-template" ||
-        notify_types === "ec-version-template"
-      ) {
-        nav(`/ec-template/?notify=${id}`, { replace: true });
-      } else if (
-        notify_types === "asset-template" ||
-        notify_types === "create-asset-template"
-      ) {
-        nav(`/assets-template?notify=${id}`, { replace: true });
-      } else if (notify_types === "supply-chain-version-template") {
-        nav(`/supply-chain-templates?notify=${id}`, { replace: true });
-      } else if (
-        notify_types === "purchase-order-version-template" ||
-        notify_types === "create-PO-template"
-      ) {
-        nav(`/purchase-order-templates?notify=${id}`, { replace: true });
-      } else if (notify_types === "pc-created") {
-        nav(`/pc-templates?notify=${id}`, { replace: true });
-      } else if (
-        notify_types === "edit-ticket" ||
-        notify_types === "create-ticket"
-      ) {
-        nav(`/ticket-view/${ticketId}/?notify=${id}`, { replace: true });
-      } else if (notify_types === "ec-created") {
-        nav(`/all-ec-list/?notify=${id}`, { replace: true });
-      } else if (
-        notify_types === "prod-change-version-template" ||
-        notify_types === "create-prod-chan-template"
-      ) {
-        nav(`/pc-templates/?notify=${id}`, { replace: true });
-      } else {
-        console.log("else part");
-      }
+      } 
       onclose();
     } catch (error) {
       console.log(error);
@@ -309,15 +269,9 @@ function Notification({ onclose, handleMakeZero }) {
                   )
                 }
               >
-                {/* {element.member_photo ?<img className='notifi-img' src=`${PHOTO_LINK}element.member_photo` />:
-              <img className='notifi-img' src='https://marathon-web-assets.s3.ap-south-1.amazonaws.com/Add+action-d3.svg'/>} */}
+               
 
-                {/* <NameProfile
-                  userName={element.member_name}
-                  width="35px"
-                  memberPhoto={element.member_photo}
-                  fontweight="500"
-                /> */}
+              
                 <img
                   width="35px"
                   height="35px"
@@ -326,209 +280,27 @@ function Notification({ onclose, handleMakeZero }) {
 
                 <div className="notif-content">
                   <div className="notifi-desc">
-                    {/* {!element.notification_title ? (
-                      <span className="notif-ticket">
-                        {element.ticket_title} has created.
-                      </span>
-                    ) : (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.notification_title} changed in{" "}
-                        {element.ticket_title}.{" "}
-                      </span>
-                    )} */}
+                    
 
-                    {element.notify_type === "create-comment" && (
+                    {element.notify_type === "create-task" && (
                       <span className="notif-ticket">
                         {" "}
                         {element.member_name} added a comment in{" "}
                         {element.ticket_sequence_id}.{" "}
                       </span>
                     )}
-                    {element.notify_type === "delete-comment" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} delete a comment in{" "}
-                        {element.ticket_sequence_id}.{" "}
-                      </span>
-                    )}
-                    {element.notify_type === "create-ticket" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} created new{" "}
-                        {element.ticket_sequence_id} ticket.{" "}
-                      </span>
-                    )}
-                    {element.notify_type === "edit-ticket" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} edited {"  "}
-                        {element.notification_title} in{" "}
-                        {element.ticket_sequence_id}.{" "}
-                      </span>
-                    )}
-                    {element.notify_type === "create-template" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} created {"  "}
-                        {element.ticket_title} template.{" "}
-                        {/* {element.ticket_sequence_id}.{" "} */}
-                      </span>
-                    )}
-
-                    {element.notify_type === "version-template" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} updated {"  "}
-                        {element.notification_title} template from v
-                        {element.ticket_sequence_id} to v{element.ticket_title}{" "}
-                        . {/* {element.ticket_sequence_id}.{" "} */}
-                      </span>
-                    )}
-
-                    {element.notify_type === "department created" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} created department{"  "}
-                        {element.ticket_title} .{" "}
-                        {/* {element.ticket_sequence_id}.{" "} */}
-                      </span>
-                    )}
-                    {element.notify_type === "department-updated" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} updated department{"  "}
-                        {element.ticket_title}.{" "}
-                        {/* {element.ticket_sequence_id}.{" "} */}
-                      </span>
-                    )}
-                    {element.notify_type === "member-removed" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} updated{"  "}
-                        {element.ticket_title} in org hierarchy.{" "}
-                      </span>
-                    )}
-                    {/* change-manager */}
-                    {element.notify_type === "change-manager" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} updated{"  "}
-                        {element.ticket_title} in org hierarchy.{" "}
-                      </span>
-                    )}
-                    {element.notify_type === "ec-version-template" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} updated {"  "}
-                        {element.notification_title} EC template from v
-                        {element.ticket_sequence_id} to v{element.ticket_title}{" "}
-                        . {/* {element.ticket_sequence_id}.{" "} */}
-                      </span>
-                    )}
-                    {element.notify_type === "asset-template" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} updated {"  "}
-                        {element.notification_title} asset template from v
-                        {element.ticket_sequence_id} to v{element.ticket_title}{" "}
-                        . {/* {element.ticket_sequence_id}.{" "} */}
-                      </span>
-                    )}
-                    {element.notify_type ===
-                      "purchase-order-version-template" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} updated {"  "}
-                        {element.notification_title} PO template from v
-                        {element.ticket_sequence_id} to v{element.ticket_title}{" "}
-                        . {/* {element.ticket_sequence_id}.{" "} */}
-                      </span>
-                    )}
-                    {element.notify_type ===
-                      "supply-chain-version-template" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} updated {"  "}
-                        {element.notification_title} Supplier template from v
-                        {element.ticket_sequence_id} to v{element.ticket_title}{" "}
-                        . {/* {element.ticket_sequence_id}.{" "} */}
-                      </span>
-                    )}
-
-                    {element.notify_type === "ec-create-template" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} created {"  "}
-                        {element.ticket_sequence_id} EC template.{" "}
-                        {/* {element.ticket_sequence_id}.{" "} */}
-                      </span>
-                    )}
-
-                    {element.notify_type === "ec-created" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} created {"  "}
-                        {element.ticket_title} EC.{" "}
-                        {/* {element.ticket_sequence_id}.{" "} */}
-                      </span>
-                    )}
-                    {element.notify_type === "create-PO-template" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} created {"  "}
-                        {element.ticket_title} PO template.{" "}
-                        {/* {element.ticket_sequence_id}.{" "} */}
-                      </span>
-                    )}
-                    {element.notify_type === "pc-created" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} created {"  "}
-                        {element.ticket_title} PCI template.{" "}
-                        {/* {element.ticket_sequence_id}.{" "} */}
-                      </span>
-                    )}
-                    {element.notify_type === "create-asset-template" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} created {"  "}
-                        {element.ticket_title} asset template.{" "}
-                        {/* {element.ticket_sequence_id}.{" "} */}
-                      </span>
-                    )}
-                    {element.notify_type === "create-prod-chan-template" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} created {"  "}
-                        {element.ticket_title} PC template.{" "}
-                        {/* {element.ticket_sequence_id}.{" "} */}
-                      </span>
-                    )}
-                    {element.notify_type === "prod-change-version-template" && (
-                      <span className="notif-ticket">
-                        {" "}
-                        {element.member_name} updated {"  "}
-                        {element.notification_title} PC template from v
-                        {element.ticket_sequence_id} to v{element.ticket_title}{" "}
-                        . {/* {element.ticket_sequence_id}.{" "} */}
-                      </span>
-                    )}
+                    
                     <span className="notify-time">
                       {formatTimeAgo(element.createdAt)}
                     </span>
                   </div>
-                  {/* <div className="notifi-date">
-                    <span className="notif-sub">
-                      {element.ticket_sequence_id}
-                    </span>
-                  </div> */}
+                  
                 </div>
               </div>
             ))}
           </InfiniteScroll>
 
-          {/* {loading && <div className="loading-indicator">Loading...</div>} */}
+          
         </div>
       </div>
     </div>
