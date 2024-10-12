@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./RegisterAndLogin.css";
+import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../constant";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
@@ -9,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchMemberDetails } from "../../redux/actions/memberAction";
 
 function RegisterAndLogin({ type, onclose, setTokenValue }) {
+  const nav = useNavigate();
   const [togglePopUp, setTogglePopUp] = useState(type);
   const [formData, setFormData] = useState({
     name: "",
@@ -96,6 +98,7 @@ function RegisterAndLogin({ type, onclose, setTokenValue }) {
         const token = loginResponse.data.data.user_token;
         if (token) {
           verifyMember(token);
+          nav("/task-list");
         }
         console.log("Logging in:", loginResponse);
       }

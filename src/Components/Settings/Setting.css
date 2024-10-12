@@ -70,3 +70,66 @@
 
 /* SETTINGS PAGE STYLING */
 
+.setting-container{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.setting-img img{
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}
+.setting-input {
+  width: 50%;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal columns */
+  gap: 10px; /* Optional: space between columns */
+}
+.login-signup-input,.login-signup-input-radio{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.login-signup-input span,.login-signup-input-radio span{
+  text-align: right;
+  width: 100px;
+  /* word-break: break-all; */
+ 
+}
+.login-signup-input input{
+  border-radius: 4px;
+  padding: 10px 5px;
+  width: 300px;
+}
+.login-signup-gender{
+  display: flex;
+  width: 300px;
+  align-items: center;
+  /* border: 1px solid red; */
+}
+.setting-navs {
+  display: flex;
+  gap: 16px;
+  padding-left: 32px;
+  border-bottom: 1px solid #EDF2F7;
+}
+.general:hover,
+.privacy:hover {
+  cursor: pointer;
+  box-shadow: 0px -3px 0px 0px #FF7A7A inset;
+}
+
+.settingActive {
+  cursor: pointer;
+  box-shadow: 0px -3px 0px 0px #FF7A7A inset;
+}
+.setting-save-btn button{
+  padding:  10px;
+  width: 150px;
+  box-sizing: border-box;
+  /* background: white; */
+  border: none;
+  border-radius: 20px;
+  
+}

@@ -6,6 +6,8 @@ import { BsTextParagraph } from "react-icons/bs";
 import { TbNumbers } from "react-icons/tb";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { useDispatch, useSelector } from 'react-redux';
+import { createTask } from '../../redux/actions/taskAction'; // import the action
 
 const draggableItems = [
   {
@@ -59,6 +61,12 @@ function TaskForm() {
     priority: "",
     due_date: "",
   });
+
+  const dispatch = useDispatch();
+  const { loading, error, success } = useSelector((state) => state.tasks);
+
+  
+
   const handleInputChange = (fieldName, value) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -140,16 +148,27 @@ function TaskForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
     const formattedData = fields.reduce((acc, field) => {
       const fieldKey = field.display_name.toLowerCase().replace(/\s+/g, "_");
       acc[fieldKey] = { ...field, value: formData[field.display_name] || "" };
       return acc;
     }, {});
-
+  
     setSavedData(formattedData);
     console.log("Formatted Form Data:", formattedData);
-    // You can send formattedData to your backend here
+  
+    // Send formattedData to your backend
+    dispatch(createTask({
+      task_title: defaultFormData.title,
+      description: defaultFormData.description,
+      due_date: defaultFormData.due_date,
+      priority: defaultFormData.priority,
+      custom_data: JSON.stringify(formattedData), // send formattedData to API
+      main_task_seq_id: 1, // Use relevant value for main_task_seq_id
+    }));
   };
+  
 
   return (
     <div
@@ -416,7 +435,7 @@ function TaskForm() {
 
       {/* {savedData && <div>Saved Data: {JSON.stringify(savedData)}</div>} */}
     </div>
-  );
+  )
 }
 
 export default TaskForm;

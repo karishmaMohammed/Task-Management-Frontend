@@ -7,6 +7,8 @@ import {
 import { toast } from "react-toastify";
 
 function SettingsPage() {
+  const [selectedSection, setSelectedSection] = useState("general");
+
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.profileDetails.profile);
 
@@ -40,7 +42,10 @@ function SettingsPage() {
       [e.target.name]: e.target.value,
     });
   };
-
+  const handleSectionClick = (section) => {
+    setSelectedSection(section);
+    // navigate(`/settings?tab=${section}`);
+  };
   // Handle save button click using Redux action
   const handleSave = () => {
     dispatch(
@@ -67,71 +72,153 @@ function SettingsPage() {
       <div className="setting-heading">
         <span>SETTINGS</span>
       </div>
-      <div className="setting-img">
-        <img
-          src="https://cdn-icons-png.freepik.com/256/3984/3984678.png?ga=GA1.1.706441703.1694584519&semt=ais_hybrid"
-          alt="Profile"
-        />
-      </div>
+      <div className="setting-navs">
+        <div
+          className={`generals${
+            selectedSection === "general" ? " settingActive" : ""
+          }`}
+          onClick={() => handleSectionClick("general")}
+          style={{
+            cursor: "pointer",
+            boxShadow:
+              selectedSection === "general"
+                ? "0px 3px 0px 0px #FF7A7A"
+                : "none",
+            padding: "10px 16px",
+            color: selectedSection === "general" ? "#FF7A7A" : "black",
+          }}
+        >
+          Profile
+        </div>
 
-      <div className="setting-input">
-        <div className="login-signup-input">
-          <span>Full Name</span>
-          <input
-            type="text"
-            name="fullName"
-            value={formData.fullName}
-            onChange={handleChange}
-          />
+        <div
+          className={`privacys${
+            selectedSection === "privacy" ? " settingActive" : ""
+          }`}
+          onClick={() => handleSectionClick("privacy")}
+          style={{
+            cursor: "pointer",
+            boxShadow:
+              selectedSection === "privacy"
+                ? "0px 3px 0px 0px #FF7A7A"
+                : "none",
+            padding: "10px 16px",
+            color: selectedSection === "privacy" ? "#FF7A7A" : "black",
+          }}
+        >
+          Change password
         </div>
-        <div className="login-signup-input">
-          <span>Email</span>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="login-signup-input">
-          <span>Phone Number</span>
-          <input
-            type="number"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="login-signup-input">
-          <span>Gender</span>
-          <div className="login-signup-gender">
-            <label>
-              <input
-                type="radio"
-                name="gender"
-                value="Male"
-                checked={formData.gender === "Male"}
-                onChange={handleChange}
-              />
-              Male
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="gender"
-                value="Female"
-                checked={formData.gender === "Female"}
-                onChange={handleChange}
-              />
-              Female
-            </label>
+      </div>
+      {selectedSection === "general" && (
+        <>
+          <div className="setting-img">
+            <img
+              src="https://cdn-icons-png.freepik.com/256/3984/3984678.png?ga=GA1.1.706441703.1694584519&semt=ais_hybrid"
+              alt="Profile"
+            />
           </div>
-        </div>
-      </div>
 
-      <div className="setting-save-btn">
-        <button onClick={handleSave}>Save</button>
-      </div>
+          <div className="setting-input">
+            <div className="login-signup-input">
+              <span>Full Name</span>
+              <input
+                type="text"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="login-signup-input">
+              <span>Email</span>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="login-signup-input">
+              <span>Phone Number</span>
+              <input
+                type="number"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="login-signup-input-radio">
+              <span>Gender</span>
+              <div className="login-signup-gender">
+                <label>
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="Male"
+                    checked={formData.gender === "Male"}
+                    onChange={handleChange}
+                  />
+                  Male
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="Female"
+                    checked={formData.gender === "Female"}
+                    onChange={handleChange}
+                  />
+                  Female
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div className="setting-save-btn">
+            <button onClick={handleSave}>Save</button>
+          </div>
+        </>
+      )}
+      {selectedSection === "privacy" && (
+        <>
+          <div className="setting-input">
+            <div className="login-signup-input">
+              <span>Old password</span>
+              <input
+                type="password"
+
+                // value={formData.fullName}
+                // onChange={handleChange}
+              />
+            </div>
+            <div className="login-signup-input">
+              <span>New password</span>
+              <input
+                type="password"
+
+                // value={formData.email}
+                // onChange={handleChange}
+              />
+            </div>
+            <div className="login-signup-input">
+              <span>Confirm new password</span>
+              <input
+                type="password"
+
+                // value={formData.phoneNumber}
+                // onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <div className="setting-save-btn">
+            <button
+            // onClick={handleSave}
+            >
+              Save
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

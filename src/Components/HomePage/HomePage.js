@@ -11,22 +11,15 @@ function HomePage() {
   
   const nav = useNavigate();
 
- 
-
- 
-   
-
-   
-
   const handleLogout = () => {
     // Clear the token from cookies
-    Cookies.remove("user_token");
+    Cookies.remove("user_task_token");
 
     // Optional: Clear local storage if you are using local storage as well
     // localStorage.clear();
 
     // Redirect to the login page after logout
-    nav("/login");
+    nav("/home");
   };
   return (
     <div className="home-page-container">

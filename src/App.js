@@ -49,7 +49,7 @@ function App() {
           />
           <Route path="/side-nav" element={<SideNavigator />} />
           <Route path="/activity" element={<ActivityLogChangePopUp />} />
-          <Route path="/task-details" element={
+          <Route path="/task-details/:task_sequence_id" element={
              <SideBarAndNav>
              <TaskDetailsPage />
            </SideBarAndNav>
