@@ -1,13 +1,25 @@
 import React, { useState } from "react";
 import "./HomePage.css";
 import Notification from "../Notification/Notification";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllNotifications } from "../../redux/actions/notificationsAction"; // Import action creators
 import { usePopup } from "../../helpers/PopUpHelper";
 import SettingsPopUp from "../Settings/SettingsPopUp";
 
 function LoggedInNavPage() {
-  const { isNotificationPopUpOpen, handleNotificationPopUpToggle, 
-    isSettingPopUpOpen, handleSettingPopUpToggle
+  const {
+    isNotificationPopUpOpen,
+    handleNotificationPopUpToggle,
+    isSettingPopUpOpen,
+    handleSettingPopUpToggle,
   } = usePopup();
+
+  const dispatch = useDispatch();
+  const { activePage } = useSelector((state) => state.notifications);
+
+  const getNotifications = () => {
+    dispatch(fetchAllNotifications(activePage));
+  };
 
   // const [openNotiofications, setOpenNotifications] = useState(false);
   const [notificationCount, setNotificationCount] = useState("");
@@ -24,12 +36,15 @@ function LoggedInNavPage() {
             alt=""
           /> */}
           <img
-            onClick={handleNotificationPopUpToggle}
+            onClick={() => {
+              handleNotificationPopUpToggle();
+              getNotifications();
+            }}
             src="https://cdn-icons-png.freepik.com/256/1156/1156949.png?ga=GA1.1.706441703.1694584519&semt=ais_hybrid"
             alt="notification"
           />
           <img
-           onClick={handleSettingPopUpToggle}
+            onClick={handleSettingPopUpToggle}
             src="https://icon-library.com/images/username-icon-png/username-icon-png-19.jpg"
             alt=""
           />
@@ -47,10 +62,13 @@ https://cdn-icons-png.freepik.com/256/11044/11044904.png?ga=GA1.1.706441703.1694
         </div>
       </div>
       {isNotificationPopUpOpen && <Notification />}
-      { isSettingPopUpOpen && 
-      <SettingsPopUp memberPhoto= '' memberName ='karishma' memberEmail='mohammed'/>
-      }
-      
+      {isSettingPopUpOpen && (
+        <SettingsPopUp
+          memberPhoto=""
+          memberName="karishma"
+          memberEmail="mohammed"
+        />
+      )}
     </>
   );
 }

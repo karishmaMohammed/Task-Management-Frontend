@@ -8,9 +8,7 @@ function SettingsPopUp({ memberPhoto, memberName, memberEmail }) {
   const { isSettingPopUpOpen, handleSettingPopUpToggle } = usePopup();
   const nav = useNavigate();
   const HandleSetting = () => {
-   
     nav("/setting");
-    
   };
   return (
     <>
@@ -37,7 +35,10 @@ function SettingsPopUp({ memberPhoto, memberName, memberEmail }) {
             <button
               title="settings"
               className="member-settings-btn"
-              onClick={HandleSetting}
+              onClick={() => {
+                handleSettingPopUpToggle();
+                HandleSetting();
+              }}
             >
               <img
                 src="https://cdn-icons-png.freepik.com/256/738/738853.png?uid=R132949527&ga=GA1.1.706441703.1694584519&semt=ais_hybrid"

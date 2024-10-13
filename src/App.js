@@ -15,20 +15,33 @@ import TaskDetailsPage from "./Components/TaskManagement/TaskDetailsPage";
 import ActivitySideOpen from "./Components/TaskManagement/ActivitySideOpen";
 import SettingsPage from "./Components/Settings/SettingsPage";
 
-
 function App() {
   const [closePopUp, setClosePopUp] = useState(false);
 
   const handleClosePopUp = () => {
-    setClosePopUp(false)
-  }
+    setClosePopUp(false);
+  };
   return (
     <div className="App" onClick={handleClosePopUp}>
       <Router>
         <Routes>
-          <Route path="/" element={<LoggedInNavPage />} />
-          <Route path="/setting" element={<SettingsPage />} />
-         
+          <Route
+            path="/"
+            element={
+              <NavBar closePopUp={closePopUp} setClosePopUp={setClosePopUp}>
+                <HomePage />
+              </NavBar>
+            }
+          />
+          <Route
+            path="/setting"
+            element={
+              <SideBarAndNav>
+                <SettingsPage />
+              </SideBarAndNav>
+            }
+          />
+
           <Route
             path="/signup"
             element={<RegisterAndLogin type="register" />}
@@ -49,11 +62,14 @@ function App() {
           />
           <Route path="/side-nav" element={<SideNavigator />} />
           <Route path="/activity" element={<ActivityLogChangePopUp />} />
-          <Route path="/task-details/:task_sequence_id" element={
-             <SideBarAndNav>
-             <TaskDetailsPage />
-           </SideBarAndNav>
-            } />
+          <Route
+            path="/task-details/:task_sequence_id"
+            element={
+              <SideBarAndNav>
+                <TaskDetailsPage />
+              </SideBarAndNav>
+            }
+          />
           <Route
             path="/task-form"
             element={
@@ -62,14 +78,7 @@ function App() {
               </SideBarAndNav>
             }
           />
-          <Route
-            path="/home"
-            element={
-              <NavBar closePopUp={closePopUp} setClosePopUp={setClosePopUp}>
-                <HomePage />
-              </NavBar>
-            }
-          />
+
           <Route path="/home-nav" element={<NavBar />} />
         </Routes>
       </Router>

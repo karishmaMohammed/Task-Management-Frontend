@@ -1,10 +1,15 @@
 import {
-  GET_NOTIFICATION_REQUEST,
-  GET_NOTIFICATION_SUCCESS,
-  GET_NOTIFICATION_FAILURE,
-  MARK_READ_NOTIFICATION_REQUEST,
-  MARK_READ_NOTIFICATION_SUCCESS,
-  MARK_READ_NOTIFICATION_FAILURE,
+  FETCH_ALL_NOTIFICATIONS_REQUEST,
+  FETCH_ALL_NOTIFICATIONS_SUCCESS,
+  FETCH_ALL_NOTIFICATIONS_FAILURE,
+  FETCH_UNREAD_NOTIFICATIONS_REQUEST,
+  FETCH_UNREAD_NOTIFICATIONS_SUCCESS,
+  FETCH_UNREAD_NOTIFICATIONS_FAILURE,
+  MARK_ALL_NOTIFICATIONS_AS_READ_REQUEST,
+  MARK_ALL_NOTIFICATIONS_AS_READ_SUCCESS,
+  MARK_ALL_NOTIFICATIONS_AS_READ_FAILURE,
+  SET_ACTIVE_ELEMENT,
+  RESET_NOTIFICATIONS,
   GET_ACTIVITY_LOGS_REQUEST,
   GET_ACTIVITY_LOGS_SUCCESS,
   GET_ACTIVITY_LOGS_FAILURE,
@@ -14,56 +19,69 @@ import { BASE_URL } from "../../constant";
 import Cookies from "js-cookie";
 
 
-export const getNotifications = () => async (dispatch) => {
-    try {
-      dispatch({ type: GET_NOTIFICATION_REQUEST });
+
+
+// Action to fetch all notifications
+export const fetchAllNotifications = (page) => async (dispatch) => {
+  dispatch({ type: FETCH_ALL_NOTIFICATIONS_REQUEST });
   
-      const headers = {
-        "task-auth-token": Cookies.get("user_task_token"),
-      };
-  
-      const response = await axios.get(
-        BASE_URL + "/notification/get-notifications",
-        {
-          headers,
-        }
-      );
-  
-      dispatch({
-        type: GET_NOTIFICATION_SUCCESS,
-        payload: response.data.data,
-      });
-    } catch (error) {
-      dispatch({
-        type: GET_NOTIFICATION_FAILURE,
-        payload: error.message,
-      });
-    }
-  };
-  
-export const markNotificationsRead = () => async (dispatch) => {
-    try {
-      dispatch({ type: MARK_READ_NOTIFICATION_REQUEST });
-  
-      const headers = {
-        "task-auth-token": Cookies.get("user_task_token"),
-      };
-  
-      const response = await axios.get(BASE_URL + "/notification/mark-read", {
-        headers,
-      });
-  
-      dispatch({
-        type: MARK_READ_NOTIFICATION_SUCCESS,
-        payload: response.data.data,
-      });
-    } catch (error) {
-      dispatch({
-        type: MARK_READ_NOTIFICATION_FAILURE,
-        payload: error.message,
-      });
-    }
-  };
+  try {
+    const headers = {
+      'task-auth-token': Cookies.get('user_task_token'),
+    };
+
+    const response = await axios.get(`${BASE_URL}/notification/get-notifications`, {
+      params: { page, size: 20 },
+      headers: headers,
+    });
+
+    dispatch({
+      type: FETCH_ALL_NOTIFICATIONS_SUCCESS,
+      payload: response.data.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: FETCH_ALL_NOTIFICATIONS_FAILURE,
+      payload: error.message,
+    });
+  }
+};
+
+
+
+// Action to mark all notifications as read
+export const markAllNotificationsAsRead = () => async (dispatch) => {
+  dispatch({ type: MARK_ALL_NOTIFICATIONS_AS_READ_REQUEST });
+
+  try {
+    const headers = {
+      'task-auth-token': Cookies.get('user_task_token'),
+    };
+
+    await axios.post(`${BASE_URL}/notification/mark-all-as-read`, {}, {
+      headers: headers,
+    });
+
+    dispatch({ type: MARK_ALL_NOTIFICATIONS_AS_READ_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: MARK_ALL_NOTIFICATIONS_AS_READ_FAILURE,
+      payload: error.message,
+    });
+  }
+};
+
+// Action to set the active element
+export const setActiveElement = (activeElement) => ({
+  type: SET_ACTIVE_ELEMENT,
+  payload: activeElement,
+});
+
+// Action to reset notifications
+export const resetNotifications = () => ({
+  type: RESET_NOTIFICATIONS,
+});
+
   
   // need to take comment id
 export const getTaskActivityLogs = () => async (dispatch) => {

@@ -1,191 +1,77 @@
-import React, { useState, useEffect, useRef } from "react";
-import { BASE_URL } from "../../constant";
+import React, { useEffect, useRef } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import Cookies from "js-cookie";
-import axios from "axios";
-import "./Notification.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllNotifications,
+  setActiveElement,
+  markAllNotificationsAsRead,
+} from "../../redux/actions/notificationsAction"; // Import action creators
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useNavigate } from "react-router-dom";
 import { usePopup } from "../../helpers/PopUpHelper";
+import "./Notification.css";
 
-const LIMIT = 20;
 function Notification() {
   const { isNotificationPopUpOpen, handleNotificationPopUpToggle } = usePopup();
+  const dispatch = useDispatch();
 
-  const [activeElement, setActiveElement] = useState("notif-all");
-  const [unReadNotification, setUnReadNotifications] = useState([]);
-  const [allNotification, setAllNotifications] = useState([]);
-  const [allUnreadNotification, setAllUnReadNotifications] = useState(0);
-  const [allNotificationCount, setAllNotificationsCount] = useState(0);
-  const [activePage, setActivePage] = useState(1);
-
-  const nav = useNavigate();
+  const {
+    activeElement,
+    unReadNotification,
+    allNotification,
+    allUnreadNotification,
+    allNotificationCount,
+    activePage,
+    loading,
+    error,
+  } = useSelector((state) => state.notifications);
 
   const containerRef = useRef(null);
 
-  const getReadNotifications = async () => {
-    try {
-      const headers = {
-        "task-auth-token": Cookies.get("user_task_token"),
-      };
-
-      const response = await axios.get(
-        `${BASE_URL}/notification/get-notifications`,
-        {
-          params: {
-            page: activePage,
-            size: LIMIT,
-          },
-          headers: headers,
-        }
-      );
-
-      setAllNotifications((prevNotifications) => [
-        ...prevNotifications,
-        ...response.data.data.all_notification,
-      ]);
-      setAllNotificationsCount(response.data.data.all_count);
-
-      setUnReadNotifications((prevNotifications) => [
-        ...prevNotifications,
-        ...response.data.data.un_read_notification,
-      ]);
-      setAllUnReadNotifications(response.data.data.un_read_count);
-      // console.log(response.data.data.un_read_notification);
-      // const notificationsToDisplay = activeElement === 'notif-unread' ? unReadNotification : allNotification;
-
-      setActivePage(activePage + 1);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   useEffect(() => {
-    getReadNotifications();
-  }, []);
-
-  const notificationsToDisplay =
-    activeElement === "notif-unread" ? unReadNotification : allNotification;
-  // console.log(notificationsToDisplay)
-  const notificationsCount =
-    activeElement === "notif-unread"
-      ? allUnreadNotification
-      : allNotificationCount;
+    if (activeElement === "notif-all") {
+      dispatch(fetchAllNotifications(activePage));
+    }
+    // } else {
+    //   dispatch(fetchUnreadNotifications());
+    // }
+  }, [dispatch, activeElement, activePage]);
 
   const handleClose = () => {
-    onclose();
+    handleNotificationPopUpToggle();
   };
 
-  const markAllAsRead = async () => {
-    try {
-      const headers = {
-        "task-auth-token": Cookies.get("user_task_token"),
-      };
-      await axios.post(
-        `${BASE_URL}/notification/mark-read`,
-        { id: "" },
-        { headers: headers }
-      );
-
-      await getReadNotifications();
-      setUnReadNotifications([]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const handleMarkRead = () => {
-    markAllAsRead();
-    // handleMakeZero();
-    // getUnreadNotifications();
+    dispatch(markAllNotificationsAsRead());
+    // dispatch(fetchUnreadNotifications());
   };
+
+  const handleNotificationClick = (id) => {
+    // Handle notification click (e.g., navigate to task)
+  };
+
+  // Ensure notifications are arrays
+  const notificationsToDisplay =
+    activeElement === "notif-unread" ? unReadNotification || [] : allNotification || [];
+  const notificationsCount =
+    activeElement === "notif-unread" ? allUnreadNotification : allNotificationCount;
+
+  // src/utils/timeUtils.js
   const formatTimeAgo = (timestamp) => {
-    const dateObject = new Date(timestamp);
     const now = new Date();
-    const timeDifference = now - dateObject;
+    const past = new Date(timestamp);
+    const seconds = Math.floor((now - past) / 1000);
 
-    if (timeDifference < 60 * 1000) {
-      // Less than a minute
-      return `${Math.floor(timeDifference / 1000)} sec${
-        timeDifference >= 2000 ? "s" : ""
-      } ago`;
-    } else if (timeDifference < 60 * 60 * 1000) {
-      // Less than an hour
-      return `${Math.floor(timeDifference / (60 * 1000))} min${
-        timeDifference >= 120000 ? "s" : ""
-      } ago`;
-    } else if (timeDifference < 24 * 60 * 60 * 1000) {
-      // Less than a day
-      return `${Math.floor(timeDifference / (60 * 60 * 1000))} hour${
-        timeDifference >= 7200000 ? "s" : ""
-      } ago`;
-    } else if (timeDifference < 48 * 60 * 60 * 1000) {
-      // Less than 2 days
-      return "yesterday";
-    } else if (timeDifference < 7 * 24 * 60 * 60 * 1000) {
-      // Less than a week
-      return `${Math.floor(timeDifference / (24 * 60 * 60 * 1000))} day${
-        timeDifference >= 172800000 ? "s" : ""
-      } ago`;
-    } else if (timeDifference < 30 * 24 * 60 * 60 * 1000) {
-      // Less than a month
-      return `${Math.floor(timeDifference / (7 * 24 * 60 * 60 * 1000))} week${
-        timeDifference >= 1209600000 ? "s" : ""
-      } ago`;
-    } else if (timeDifference < 365 * 24 * 60 * 60 * 1000) {
-      // Less than a year
-      return `${Math.floor(timeDifference / (30 * 24 * 60 * 60 * 1000))} month${
-        timeDifference >= 2629746000 ? "s" : ""
-      } ago`;
-    } else {
-      // More than a year
-      return `${Math.floor(timeDifference / (365 * 24 * 60 * 60 * 1000))} year${
-        timeDifference >= 31556952000 ? "s" : ""
-      } ago`;
-    }
-  };
-
-  //   return <span>{formattedTime}</span>;
-  // };
-
-  const handleNotificationClick = async (id, ticketId, notify_types) => {
-    // console.log('Clicked on notification with id:', ticketId);
-    try {
-      const headers = {
-        "task-auth-token": Cookies.get("user_task_token"),
-      };
-      await axios.post(
-        `${BASE_URL}/v1/notification/mark-all-read`,
-        { id },
-        { headers: headers }
-      );
-      getReadNotifications();
-      // window.location.pathname=`/ticket-view/${ticketId}/?notify=${id}`
-      // nav(`/ticket-view/${ticketId}/?notify=${id}`, { replace: true });
-      if (notify_types === "create-task") {
-        nav(`/org-home/?notify=${id}`, { replace: true });
-      }
-      onclose();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  // const handleClick =()=>{
-  //   setActiveElement(element)
-  // }
-  const handleScroll = () => {
-    const container = containerRef.current;
-    if (
-      container.scrollTop + container.clientHeight >=
-      container.scrollHeight
-    ) {
-      getReadNotifications();
-    }
-  };
-  const handleNextFunction = () => {
-    getReadNotifications();
-  };
-
-  const handleReload = async () => {
-    await getReadNotifications();
+    let interval = Math.floor(seconds / 31536000);
+    if (interval > 1) return `${interval} years ago`;
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) return `${interval} months ago`;
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) return `${interval} days ago`;
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) return `${interval} hours ago`;
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) return `${interval} minutes ago`;
+    return `${seconds} seconds ago`;
   };
 
   return (
@@ -195,101 +81,53 @@ function Notification() {
           <div className="notification-div">
             <div className="notif-top">
               <div className="notification-title">
-                {/* <img src={`${ASSET_PREFIX_URL}bell_icon.png`} alt="" /> */}
                 <span style={{ color: "#257180", fontSize: "24px" }}>
                   Notifications
                 </span>
-                {/* <img
-               onClick={() => handleReload()}
-             //   src={`${ASSET_PREFIX_URL}refresh_2805355.png`}
-               title="refresh"
-               alt=""
-               style={{ cursor: "pointer" }}
-             /> */}
               </div>
-
               <div className="notification-close-btn">
-                <CloseIcon onClick={handleNotificationPopUpToggle} />
+                <CloseIcon onClick={handleClose} />
               </div>
             </div>
-
             <div className="notification-all-unread">
               <div
-                className={`notif-all ${
-                  activeElement === "notif-all" ? "border-highlight" : ""
-                }`}
-                onClick={() => setActiveElement("notif-all")}
+                className={`notif-all ${activeElement === "notif-all" ? "border-highlight" : ""}`}
+                onClick={() => dispatch(setActiveElement("notif-all"))}
               >
                 <span>All</span>
               </div>
               <div
-                className={`notif-unread ${
-                  activeElement === "notif-unread" ? "border-highlight" : ""
-                }`}
-                onClick={() => {
-                  setActiveElement("notif-unread");
-                  // Reset page when switching to unread notifications
-                }}
+                className={`notif-unread ${activeElement === "notif-unread" ? "border-highlight" : ""}`}
+                onClick={() => dispatch(setActiveElement("notif-unread"))}
               >
-                <span>
-                  Unread ({allUnreadNotification ? allUnreadNotification : 0})
-                </span>
+                <span>Unread ({allUnreadNotification || 0})</span>
               </div>
             </div>
             <div className="mark-read">
               <span onClick={handleMarkRead}>Mark all as read</span>
             </div>
-            <div
-              className="notifications"
-              onScroll={handleScroll}
-              ref={containerRef}
-            >
+            <div className="notifications" ref={containerRef}>
               <InfiniteScroll
                 dataLength={notificationsToDisplay.length}
-                next={() => handleNextFunction()}
+                next={() => dispatch(fetchAllNotifications(activePage))}
                 hasMore={notificationsToDisplay.length < notificationsCount}
-                loader={
-                  <div className="loading-indicator" style={{ color: "black" }}>
-                    <h4>Loading...</h4>
-                  </div>
-                }
-                // endMessage={
-                //   <p style={{ textAlign: "center", marginTop: "10px" }}>
-                //     <b>Yay! You have seen it all</b>
-                //   </p>
-                // }
+                loader={<div className="loading-indicator" style={{ color: "black" }}><h4>Loading...</h4></div>}
               >
                 {notificationsToDisplay.map((element, index) => (
-                  <div
-                    key={index}
-                    className="notified-box"
-                    onClick={() =>
-                      handleNotificationClick(
-                        element._id,
-                        element.ticket_sequence_id,
-                        element.notify_type
-                      )
-                    }
-                  >
+                  <div key={index} className="notified-box" onClick={() => handleNotificationClick(element._id)}>
                     <img
                       width="35px"
                       height="35px"
-                      src="https://marathon-web-assets.s3.ap-south-1.amazonaws.com/Add+action-d3.svg"
+                      src="https://cdn-icons-png.freepik.com/256/5030/5030196.png"
+                      alt="Notification Icon"
                     />
-
                     <div className="notif-content">
                       <div className="notifi-desc">
-                        {element.notify_type === "create-task" && (
-                          <span className="notif-ticket">
-                            {" "}
-                            {element.member_name} added a comment in{" "}
-                            {element.ticket_sequence_id}.{" "}
-                          </span>
-                        )}
-
-                        <span className="notify-time">
-                          {formatTimeAgo(element.createdAt)}
+                        <span className="notif-ticket">
+                          {element.notification_title}
                         </span>
+                        <span className="task-seq-id">{" "}({element.task_seq_id})</span>
+                        <span className="notify-time">{formatTimeAgo(element.createdAt)}</span>
                       </div>
                     </div>
                   </div>

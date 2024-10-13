@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./RegisterAndLogin.css";
-import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../constant";
+import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import CloseIcon from "@mui/icons-material/Close";
@@ -98,7 +98,7 @@ function RegisterAndLogin({ type, onclose, setTokenValue }) {
         const token = loginResponse.data.data.user_token;
         if (token) {
           verifyMember(token);
-          nav("/task-list");
+          nav('/task-form')
         }
         console.log("Logging in:", loginResponse);
       }

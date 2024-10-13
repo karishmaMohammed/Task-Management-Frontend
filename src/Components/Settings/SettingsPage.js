@@ -68,7 +68,7 @@ function SettingsPage() {
   };
 
   return (
-    <div className="setting-container">
+    <div className="setting-container" style={{ marginTop: "75px", marginLeft: "200px", marginRight: "5px" }}>
       <div className="setting-heading">
         <span>SETTINGS</span>
       </div>
