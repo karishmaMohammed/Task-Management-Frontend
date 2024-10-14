@@ -65,9 +65,9 @@ function App() {
           <Route
             path="/task-details/:task_sequence_id"
             element={
-              <SideBarAndNav>
+              // <SideBarAndNav>
                 <TaskDetailsPage />
-              </SideBarAndNav>
+              // </SideBarAndNav>
             }
           />
           <Route

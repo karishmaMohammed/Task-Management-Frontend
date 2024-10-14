@@ -84,7 +84,7 @@
   width: 50%;
   display: grid;
   grid-template-columns: 1fr 1fr; /* Two equal columns */
-  gap: 10px; /* Optional: space between columns */
+  gap: 30px; /* Optional: space between columns */
 }
 .login-signup-input,.login-signup-input-radio{
   display: flex;
@@ -132,4 +132,11 @@
   border: none;
   border-radius: 20px;
   
+}
+.setting-img,.setting-save-btn{
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
 }

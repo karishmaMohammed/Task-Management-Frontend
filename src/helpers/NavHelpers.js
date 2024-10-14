@@ -10,13 +10,14 @@ const toastStyle = {
   };
 
   
-export const handleNavigation = (nav) => {
+export const handleNavigation = (nav, type) => {
     const token = Cookies.get("user_task_token");
-    if(token){
+    if(type === 'task' && token){
       nav("/task-form");
+    }else if(type === 'list' && token){
+      nav("/task-list");
     }else{
       toast.error('Please login', toastStyle);
       nav('/');
     }
-   
   }

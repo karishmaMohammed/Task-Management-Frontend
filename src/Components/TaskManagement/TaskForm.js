@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import "./TaskManagement.css";
 import { FaTextWidth } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 import { CiLink } from "react-icons/ci";
 import { BsTextParagraph } from "react-icons/bs";
 import { TbNumbers } from "react-icons/tb";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { handleNavigation } from "../../helpers/NavHelpers";
 import { useDispatch, useSelector } from 'react-redux';
 import { createTask } from '../../redux/actions/taskAction'; // import the action
 
@@ -63,9 +65,10 @@ function TaskForm() {
   });
 
   const dispatch = useDispatch();
-  const { loading, error, success } = useSelector((state) => state.tasks);
-
+  const { loading, error, success, taskList } = useSelector((state) => state.tasks);
   
+
+  const nav = useNavigate();
 
   const handleInputChange = (fieldName, value) => {
     setFormData((prevData) => ({
@@ -167,6 +170,10 @@ function TaskForm() {
       custom_data: JSON.stringify(formattedData), // send formattedData to API
       main_task_seq_id: 1, // Use relevant value for main_task_seq_id
     }));
+
+    if(taskList.length){
+      handleNavigation(nav, 'list')
+    }
   };
   
 

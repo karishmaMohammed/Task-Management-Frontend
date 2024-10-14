@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getProfileInfo,
   updateProfile,
+  changePassword,
 } from "../../redux/actions/settingsAction";
 import { toast } from "react-toastify";
 
@@ -17,8 +18,11 @@ function SettingsPage() {
     email: "",
     phoneNumber: "",
     gender: "",
+    oldPassword: "",
+    password: "",
+    confirmPassword: "",
   });
-
+  console.log(formData, "formData");
   // Fetch profile information from Redux and update the form state
   useEffect(() => {
     dispatch(getProfileInfo());
@@ -30,7 +34,7 @@ function SettingsPage() {
         fullName: profile.full_name || "",
         email: profile.email || "",
         phoneNumber: profile.phone_number || "",
-        gender: profile.gender || "Male",
+        gender: profile.gender || "",
       });
     }
   }, [profile]);
@@ -47,7 +51,7 @@ function SettingsPage() {
     // navigate(`/settings?tab=${section}`);
   };
   // Handle save button click using Redux action
-  const handleSave = () => {
+  const handleProfileSave = () => {
     dispatch(
       updateProfile(
         formData.fullName,
@@ -67,10 +71,27 @@ function SettingsPage() {
     });
   };
 
+  const handlePasswordSave = () => {
+    console.log(formData)
+    dispatch(
+      changePassword(
+        formData.oldPassword,
+        formData.password,
+        formData.confirmPassword
+      )
+    );
+  }
+
   return (
-    <div className="setting-container" style={{ marginTop: "75px", marginLeft: "200px", marginRight: "5px" }}>
+    <div
+      className="setting-container"
+      style={{ marginTop: "75px", marginLeft: "200px", marginRight: "5px" }}
+    >
       <div className="setting-heading">
-        <span>SETTINGS</span>
+        <span style={{ color: "#257180", fontSize: "24px" }}>
+          {" "}
+          Manage your settings
+        </span>
       </div>
       <div className="setting-navs">
         <div
@@ -154,7 +175,7 @@ function SettingsPage() {
                     type="radio"
                     name="gender"
                     value="Male"
-                    checked={formData.gender === "Male"}
+                    checked={formData.gender === "male"}
                     onChange={handleChange}
                   />
                   Male
@@ -164,7 +185,7 @@ function SettingsPage() {
                     type="radio"
                     name="gender"
                     value="Female"
-                    checked={formData.gender === "Female"}
+                    checked={formData.gender === "female"}
                     onChange={handleChange}
                   />
                   Female
@@ -174,7 +195,7 @@ function SettingsPage() {
           </div>
 
           <div className="setting-save-btn">
-            <button onClick={handleSave}>Save</button>
+            <button onClick={handleProfileSave}>Save</button>
           </div>
         </>
       )}
@@ -185,36 +206,36 @@ function SettingsPage() {
               <span>Old password</span>
               <input
                 type="password"
-
-                // value={formData.fullName}
-                // onChange={handleChange}
+                name="oldPassword" 
+                value={formData.oldPassword}
+                onChange={handleChange}
               />
             </div>
             <div className="login-signup-input">
               <span>New password</span>
               <input
                 type="password"
-
-                // value={formData.email}
-                // onChange={handleChange}
+                name="password" 
+                value={formData.password}
+                onChange={handleChange}
               />
             </div>
             <div className="login-signup-input">
               <span>Confirm new password</span>
               <input
                 type="password"
-
-                // value={formData.phoneNumber}
-                // onChange={handleChange}
+                name="confirmPassword" 
+                value={formData.confirmPassword}
+                onChange={handleChange}
               />
             </div>
           </div>
 
           <div className="setting-save-btn">
             <button
-            // onClick={handleSave}
+            onClick={handlePasswordSave}
             >
-              Save
+              Change Password
             </button>
           </div>
         </>

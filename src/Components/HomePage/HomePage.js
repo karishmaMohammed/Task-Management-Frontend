@@ -13,7 +13,7 @@ function HomePage() {
   const nav = useNavigate();
 
   const handleNav = () => {
-    handleNavigation(nav)
+    handleNavigation(nav, 'task')
   }
 
   const handleLogout = () => {

@@ -80,11 +80,14 @@ function RegisterAndLogin({ type, onclose, setTokenValue }) {
             email: formData.email,
             phone_number: formData.phoneNumber,
             password: formData.password,
-            gender: formData.gender,
+            gender: true,
           }
         );
         if (registerResponse.data.meta.success !== true) {
           toast.error(registerResponse.data.meta.message, toastStyle);
+        }else{
+          onclose();
+          toast.success(registerResponse.data.meta.message, toastStyle);
         }
         console.log("Registering:", registerResponse);
       } else if (togglePopUp === "login") {
@@ -124,7 +127,7 @@ function RegisterAndLogin({ type, onclose, setTokenValue }) {
             <div className="login-signup-input">
               <span>Name</span>
               <input
-                togglePopUp="text"
+                type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
@@ -135,7 +138,7 @@ function RegisterAndLogin({ type, onclose, setTokenValue }) {
             <div className="login-signup-input">
               <span>Phone number</span>
               <input
-                togglePopUp="tel"
+                type="tel"
                 name="phoneNumber"
                 value={formData.phoneNumber}
                 onChange={handleChange}
@@ -145,7 +148,7 @@ function RegisterAndLogin({ type, onclose, setTokenValue }) {
           <div className="login-signup-input">
             <span>Email</span>
             <input
-              togglePopUp="email"
+              type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
@@ -155,7 +158,7 @@ function RegisterAndLogin({ type, onclose, setTokenValue }) {
           <div className="login-signup-input">
             <span>Password</span>
             <input
-              togglePopUp="password"
+              type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
@@ -166,7 +169,7 @@ function RegisterAndLogin({ type, onclose, setTokenValue }) {
             <div className="login-signup-input">
               <span>Confirm password</span>
               <input
-                togglePopUp="password"
+                type="password"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
@@ -180,7 +183,8 @@ function RegisterAndLogin({ type, onclose, setTokenValue }) {
               <div className="login-signup-gender">
                 <label>
                   <input
-                    togglePopUp="radio"
+                  style={{width:'10px'}}
+                    type="radio"
                     name="gender"
                     value="Male"
                     checked={formData.gender === "Male"}
@@ -190,7 +194,8 @@ function RegisterAndLogin({ type, onclose, setTokenValue }) {
                 </label>
                 <label>
                   <input
-                    togglePopUp="radio"
+                   style={{width:'10px'}}
+                    type="radio"
                     name="gender"
                     value="Female"
                     checked={formData.gender === "Female"}

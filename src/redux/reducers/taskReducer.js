@@ -14,7 +14,7 @@ import {
 const initialState = {
   loading: false,
   taskList: [],
-  taskDetails: null, // Added for task details
+  taskDetails: {}, // Added for task details
   error: '',
 };
 

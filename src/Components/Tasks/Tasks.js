@@ -14,7 +14,8 @@ function Tasks() {
   const { loading, taskList, error } = useSelector((state) => state.tasks);
 
   useEffect(() => {
-    dispatch(fetchTasks()); // Fetch tasks when the component mounts
+    dispatch(fetchTasks());
+   
   }, [dispatch]);
 
   if (loading) {
@@ -33,9 +34,8 @@ function Tasks() {
   }
 
   const handleNav = () => {
-    handleNavigation(nav)
-  }
-  
+    handleNavigation(nav, "task");
+  };
 
   return (
     <div style={{ marginTop: "5%", marginLeft: "15%", width: "100%" }}>
@@ -46,7 +46,7 @@ function Tasks() {
             <SearchIcon style={{ color: "#001325" }} />
             <input type="text" placeholder={"Search by task title"} />
           </div>
-          <button onClick={()=>handleNav()}>+ New Task</button>
+          <button onClick={() => handleNav()}>+ New Task</button>
         </div>
       </div>
 
@@ -62,14 +62,21 @@ function Tasks() {
           </thead>
           <tbody>
             {taskList && taskList.length > 0 ? (
-              taskList.map((task) => (
-                <tr key={task._id}>
-                  <td>{task.task_sequence_id}</td>
-                  <td>{task.task_title}</td>
-                  <td>{task.due_date}</td>
-                  <td>{task.task_status}</td>
-                </tr>
-              ))
+              taskList.map((task) =>
+                task ? ( // Add a null check here
+                  <tr
+                    key={task._id}
+                    onClick={() =>
+                      nav(`/task-details/${task.task_sequence_id}`)
+                    }
+                  >
+                    <td>{task.task_sequence_id}</td>
+                    <td>{task.task_title}</td>
+                    <td>{task.due_date}</td>
+                    <td>{task.task_status}</td>
+                  </tr>
+                ) : null
+              )
             ) : (
               <tr>
                 <td colSpan="4">No tasks available</td>

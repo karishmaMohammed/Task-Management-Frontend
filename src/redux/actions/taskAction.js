@@ -69,6 +69,7 @@ export const fetchTasks = () => {
 };
 
 export const fetchTaskDetails = (task_sequence_id) => {
+  console.log(task_sequence_id);
   return async (dispatch) => {
     dispatch({ type: FETCH_TASK_DETAILS_REQUEST });
 

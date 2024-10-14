@@ -59,7 +59,7 @@ function NavBar({ children}) {
         </div>
         <div className="log-sign-mode-btns">
           <button onClick={() => handleLogInSignupPopUp("login")}>LogIn</button>
-          <button onClick={() => handleLogInSignupPopUp("signup")}>
+          <button onClick={() => handleLogInSignupPopUp("register")}>
             SignUp
           </button>
           {mode ? (
