@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchTasks } from "../../redux/actions/taskAction"; // Assuming you have a fetchTasks action
 import SearchIcon from "@mui/icons-material/Search";
 import { toast } from "react-toastify";
+import { handleNavigation } from "../../helpers/NavHelpers";
 import "./Tasks.css";
 import Cookies from "js-cookie";
 
@@ -32,15 +33,9 @@ function Tasks() {
   }
 
   const handleNav = () => {
-    const token = Cookies.get("user_task_token");
-    if(token){
-      nav("/task-form");
-    }else{
-      toast.error('Please login', toastStyle);
-      nav('/home');
-    }
-   
+    handleNavigation(nav)
   }
+  
 
   return (
     <div style={{ marginTop: "5%", marginLeft: "15%", width: "100%" }}>

@@ -3,6 +3,7 @@ import "./HomePage.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../../constant";
+import { handleNavigation } from "../../helpers/NavHelpers";
 import Cookies from "js-cookie";
 import upArrow from "../../Assets/ArrowUpRight.png";
 
@@ -11,15 +12,19 @@ function HomePage() {
   
   const nav = useNavigate();
 
+  const handleNav = () => {
+    handleNavigation(nav)
+  }
+
   const handleLogout = () => {
     // Clear the token from cookies
     Cookies.remove("user_task_token");
-
+    nav("/");
     // Optional: Clear local storage if you are using local storage as well
     // localStorage.clear();
 
     // Redirect to the login page after logout
-    nav("/home");
+  
   };
   return (
     <div className="home-page-container">
@@ -44,7 +49,7 @@ function HomePage() {
         </div>
         <div className="home-page-logo">
           <div className="home-explore-btn">
-            <button>
+            <button onClick={handleNav}>
               Explore
               <img src={upArrow} alt="arrow" />
             </button>
