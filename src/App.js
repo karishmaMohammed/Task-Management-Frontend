@@ -14,6 +14,7 @@ import ActivityLogChangePopUp from "./Components/TaskManagement/ActivityLogChang
 import TaskDetailsPage from "./Components/TaskManagement/TaskDetailsPage";
 import ActivitySideOpen from "./Components/TaskManagement/ActivitySideOpen";
 import SettingsPage from "./Components/Settings/SettingsPage";
+import Loader from "./Components/Loader/Loader";
 
 function App() {
   const [closePopUp, setClosePopUp] = useState(false);
@@ -25,6 +26,7 @@ function App() {
     <div className="App" onClick={handleClosePopUp}>
       <Router>
         <Routes>
+
           <Route
             path="/"
             element={
@@ -33,6 +35,7 @@ function App() {
               </NavBar>
             }
           />
+           <Route path="/load" element={<Loader/>} />
           <Route
             path="/setting"
             element={
@@ -65,9 +68,9 @@ function App() {
           <Route
             path="/task-details/:task_sequence_id"
             element={
-              // <SideBarAndNav>
+              <SideBarAndNav>
                 <TaskDetailsPage />
-              // </SideBarAndNav>
+               </SideBarAndNav>
             }
           />
           <Route

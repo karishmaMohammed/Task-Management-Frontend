@@ -12,24 +12,17 @@ import ActivitySideOpen from "./ActivitySideOpen";
 import { usePopup } from "../../helpers/PopUpHelper";
 
 function TaskDetailsPage() {
-  // useParams() to get task_sequence_id from URL
   const { task_sequence_id } = useParams();
-  console.log(task_sequence_id);
-  // Pop-up hook for activity side panel
+
   const { isActivityPopUpOpen, handleActivityPopUpToggle } = usePopup();
 
   // Redux hooks to dispatch action and select state
   const dispatch = useDispatch();
   const { taskDetails, loading, error } = useSelector((state) => state.tasks);
 
-  // Fetch task details using useEffect on component mount
-  // Fetch task details using useEffect on component mount and when task_sequence_id changes
   useEffect(() => {
-    console.log("task seq id:", task_sequence_id);
-
-    // Dispatch an action to fetch task details
     dispatch(fetchTaskDetails(task_sequence_id));
-  }, [task_sequence_id, dispatch]); // Add task_sequence_id and dispatch as dependencies
+  }, [task_sequence_id, dispatch]); 
 
   // Loading and Error states
   if (loading) return <div>Loading...</div>;
@@ -46,7 +39,7 @@ function TaskDetailsPage() {
           <div className="details-field-title">
             <div className="details-value-title">
               <div style={{ maxWidth: "95%" }}>
-                {taskDetails.task_title || "Default Title"}
+                {taskDetails?.task_title || "Default Title"}
               </div>
               <FaEdit
                 className="edit-icon"
@@ -65,7 +58,7 @@ function TaskDetailsPage() {
                   className="priority-color"
                   style={{
                     backgroundColor:
-                      taskDetails.priority === "High" ? "red" : "blue",
+                      taskDetails?.priority === "High" ? "red" : "blue",
                   }}
                 />
               </div>
@@ -73,7 +66,7 @@ function TaskDetailsPage() {
               {/* Status Field */}
               <div className="details-field-status">
                 <Select
-                  value={{ label: taskDetails.task_status || "To Do" }}
+                  value={{ label: taskDetails?.task_status || "To Do" }}
                   options={[
                     { label: "To Do", value: "to-do" },
                     { label: "In Progress", value: "in-progress" },
@@ -87,7 +80,7 @@ function TaskDetailsPage() {
               <div className="details-field">
                 <textarea
                   disabled
-                  value={taskDetails.description || "No Description"}
+                  value={taskDetails?.description || "No Description"}
                 />
               </div>
             </div>

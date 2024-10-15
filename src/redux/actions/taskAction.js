@@ -78,7 +78,7 @@ export const fetchTaskDetails = (task_sequence_id) => {
         "task-auth-token": Cookies.get("user_task_token"),
       };
 
-      const response = await axios.get(`${BASE_URL}/task/${task_sequence_id}`, {
+      const response = await axios.get(`${BASE_URL}/task/get-task-details/${task_sequence_id}`, {
         headers,
       });
 
