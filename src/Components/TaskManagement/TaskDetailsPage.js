@@ -10,6 +10,7 @@ import { MdDelete } from "react-icons/md";
 import DateContainer from "./DateContainer";
 import ActivitySideOpen from "./ActivitySideOpen";
 import { usePopup } from "../../helpers/PopUpHelper";
+import Loader from "../Loader/Loader";
 
 function TaskDetailsPage() {
   const { task_sequence_id } = useParams();
@@ -25,11 +26,12 @@ function TaskDetailsPage() {
   }, [task_sequence_id, dispatch]); 
 
   // Loading and Error states
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loader />;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <>
+  
       <div
         className="details-page"
         style={{ marginTop: "2.5%", marginLeft: "12%", padding: "24px" }}
@@ -114,7 +116,6 @@ function TaskDetailsPage() {
           </div>
         </div>
       </div>
-
       {/* Activity Side Panel */}
       {isActivityPopUpOpen && <ActivitySideOpen />}
     </>

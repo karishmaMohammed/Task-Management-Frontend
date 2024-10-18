@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchTasks } from "../../redux/actions/taskAction"; // Assuming you have a fetchTasks action
@@ -7,20 +7,28 @@ import { toast } from "react-toastify";
 import { handleNavigation } from "../../helpers/NavHelpers";
 import "./Tasks.css";
 import Cookies from "js-cookie";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+
 
 function Tasks() {
   const nav = useNavigate();
   const dispatch = useDispatch();
   const { loading, taskList, error } = useSelector((state) => state.tasks);
 
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const tasksPerPage = 5; // Number of tasks to show per page
+
+
   useEffect(() => {
     dispatch(fetchTasks());
-   
   }, [dispatch]);
+
 
   if (loading) {
     return <div>Loading...</div>;
   }
+
 
   const toastStyle = {
     position: "top-right",
@@ -29,13 +37,38 @@ function Tasks() {
     pauseOnHover: true,
     draggable: true,
   };
+ 
   if (error) {
     toast.error(error, toastStyle);
   }
 
+
   const handleNav = () => {
     handleNavigation(nav, "task");
   };
+
+
+  // Pagination logic
+  const indexOfLastTask = currentPage * tasksPerPage;
+  const indexOfFirstTask = indexOfLastTask - tasksPerPage;
+  const currentTasks = taskList.slice(indexOfFirstTask, indexOfLastTask); // Current tasks to display
+  const totalPages = Math.ceil(taskList.length / tasksPerPage);
+
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
 
   return (
     <div style={{ marginTop: "5%", marginLeft: "15%", width: "100%" }}>
@@ -50,10 +83,11 @@ function Tasks() {
         </div>
       </div>
 
+
       <div className="task-table-container">
         <table className="task-table-data">
           <thead>
-            <tr>
+            <tr style={{ padding: "10px" }}>
               <th>Task Id</th>
               <th>Task Title</th>
               <th>Due Date</th>
@@ -61,9 +95,9 @@ function Tasks() {
             </tr>
           </thead>
           <tbody>
-            {taskList && taskList.length > 0 ? (
-              taskList.map((task) =>
-                task ? ( // Add a null check here
+            {currentTasks && currentTasks.length > 0 ? (
+              currentTasks.map((task) =>
+                task ? (
                   <tr
                     key={task._id}
                     onClick={() =>
@@ -86,9 +120,47 @@ function Tasks() {
         </table>
       </div>
 
-      <div>pagination</div>
+
+      {/* Pagination controls */}
+      {/* {totalPages > 1 && ( */}
+      <div style={{display:'flex',alignItems:'center',justifyContent:'center',width:'100%'}}>
+      <div className="pagination">
+          <button
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+            className="prev-button"
+          >
+            <KeyboardBackspaceIcon />
+            prev
+          </button>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => handlePageChange(index + 1)}
+              className={`pagination-button ${
+                currentPage === index + 1 ? "active" : ""
+              }`}
+            >
+              {index + 1}
+            </button>
+          ))}
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className="next-button"
+          >
+            next
+            <KeyboardBackspaceIcon style={{ transform: "rotate(180deg)" }} />
+          </button>
+        </div>
+
+
+      </div>
+     
+      {/* )} */}
     </div>
   );
 }
+
 
 export default Tasks;

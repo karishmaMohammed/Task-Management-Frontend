@@ -1,45 +1,43 @@
 .loader {
     position: relative;
-    height: 200px;
-    width: 200px;
-    border-bottom: 3px solid #ff3d00;
-    box-sizing: border-box;
-    animation: drawLine 4s linear infinite;
+    width: 100px;
+    height: 130px;
+    background: rgb(246, 144, 246);
+    border-radius: 4px;
   }
-  .loader:before {
-    content: "";
+  .loader:before{
+    content: '';
     position: absolute;
-    left: calc(100% + 14px);
-    bottom: -6px;
-    width: 16px;
-    height: 100px;
-    border-radius: 20px 20px 50px 50px;
+    width: 54px;
+    height: 25px;
+    left: 50%;
+    top: 0;
+    background-image:
+    radial-gradient(ellipse at center, #0000 24%,rgb(240, 8, 240) 25%,rgb(240, 8, 240) 64%,#0000 65%),
+    linear-gradient(to bottom, #0000 34%,rgb(240, 8, 240) 35%);
+    background-size: 12px 12px , 100% auto;
     background-repeat: no-repeat;
-    background-image: linear-gradient(#ff3d00 6px, transparent 0),
-      linear-gradient(45deg, rgba(0, 0, 0, 0.02) 49%, white 51%),
-      linear-gradient(315deg, rgba(0, 0, 0, 0.02) 49%, white 51%),
-      linear-gradient( to bottom, #ffffff 10%, #ff3d00 10%, #ff3d00 90%, #ffffff 90% );
-    background-size: 3px 3px, 8px 8px, 8px 8px, 16px 88px;
-    background-position: center bottom, left 88px, right 88px, left top;
-    transform: rotate(25deg);
-    animation: pencilRot 4s linear infinite;
+    background-position: center top;
+    transform: translate(-50% , -65%);
+    box-shadow: 0 -3px rgba(0, 0, 0, 0.25) inset;
   }
-  
-  @keyframes drawLine {
-    0%, 100% { width: 0px }
-    45%, 55% { width: 200px }
-  }
-  
-  @keyframes pencilRot {
-    0%, 45% {
-      bottom: -6px;
-      left: calc(100% + 14px);
-      transform: rotate(25deg);
-    }
-    55%,
-    100% {
-      bottom: -12px;
-      left: calc(100% + 16px);
-      transform: rotate(220deg);
-    }
-  }
+ .loader:after{
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    transform: translateX(-50%);
+    width: 66%;
+    height: 60%;
+    background: linear-gradient(to bottom, #fff 30%, #0000 31%);
+    background-size: 100% 16px;
+    animation: writeDown 1s ease-out infinite;
+ }
+
+ @keyframes writeDown {
+    0% { height: 0%; opacity: 0;}
+    20%{ height: 0%; opacity: 1;}
+    80% { height: 65%; opacity: 1;}
+    100% { height: 65%; opacity: 0;}
+ }
+      
