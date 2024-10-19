@@ -1,34 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { fetchTasks } from "../../redux/actions/taskAction"; // Assuming you have a fetchTasks action
+import { fetchTasks, deleteTask } from "../../redux/actions/taskAction"; // Assuming you have a fetchTasks action
 import SearchIcon from "@mui/icons-material/Search";
 import { toast } from "react-toastify";
 import { handleNavigation } from "../../helpers/NavHelpers";
 import "./Tasks.css";
 import Cookies from "js-cookie";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import { MdDelete } from "react-icons/md";
+import Loader from "../Loader/Loader";
 
 
 function Tasks() {
   const nav = useNavigate();
   const dispatch = useDispatch();
-  const { loading, taskList, error } = useSelector((state) => state.tasks);
-
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const tasksPerPage = 5; // Number of tasks to show per page
-
-
-  useEffect(() => {
-    dispatch(fetchTasks());
-  }, [dispatch]);
-
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
+  const { loading, taskList, error, message } = useSelector((state) => state.tasks);
 
   const toastStyle = {
     position: "top-right",
@@ -37,6 +24,26 @@ function Tasks() {
     pauseOnHover: true,
     draggable: true,
   };
+  const [currentPage, setCurrentPage] = useState(1);
+  const tasksPerPage = 5; 
+
+
+  useEffect(() => {
+    dispatch(fetchTasks());
+  }, [dispatch]);
+
+  const handleTaskDel = (e,task_id) => {
+    e.stopPropagation()
+    dispatch(deleteTask(task_id));
+   if(message){
+    toast.success(message, toastStyle);
+   }
+  }
+
+
+  if (loading) {
+    return <Loader />;
+  }
  
   if (error) {
     toast.error(error, toastStyle);
@@ -92,6 +99,7 @@ function Tasks() {
               <th>Task Title</th>
               <th>Due Date</th>
               <th>Task Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -108,6 +116,7 @@ function Tasks() {
                     <td>{task.task_title}</td>
                     <td>{task.due_date}</td>
                     <td>{task.task_status}</td>
+                    <td><MdDelete onClick={(e)=> handleTaskDel(e,task._id)}/></td>
                   </tr>
                 ) : null
               )

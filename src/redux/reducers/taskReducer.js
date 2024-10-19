@@ -8,6 +8,9 @@ import {
   FETCH_TASK_DETAILS_REQUEST,
   FETCH_TASK_DETAILS_SUCCESS,
   FETCH_TASK_DETAILS_FAILURE,
+  DELETE_TASK_REQUEST,
+  DELETE_TASK_SUCCESS,
+  DELETE_TASK_FAILURE,
   // other action types...
 } from '../actionTypes';
 
@@ -16,6 +19,7 @@ const initialState = {
   taskList: [],
   taskDetails: {}, // Added for task details
   error: '',
+  message:''
 };
 
 const taskReducer = (state = initialState, action) => {
@@ -68,6 +72,23 @@ const taskReducer = (state = initialState, action) => {
         taskDetails: action.payload, // Store the fetched task details
       };
     case FETCH_TASK_DETAILS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+      case DELETE_TASK_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case DELETE_TASK_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        message: action.payload,
+      };
+    case DELETE_TASK_FAILURE:
       return {
         ...state,
         loading: false,

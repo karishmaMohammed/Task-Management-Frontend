@@ -14,6 +14,7 @@ import {
     loading: false,
     comments: [],
     error: null,
+    success: false
   };
   
   const commentsReducer = (state = initialState, action) => {
@@ -31,6 +32,7 @@ import {
           ...state,
           loading: false,
           comments: [...state.comments, action.payload], // Add new comment to the list
+          success: action.payload,
         };
       case GET_COMMENT_SUCCESS:
         return {

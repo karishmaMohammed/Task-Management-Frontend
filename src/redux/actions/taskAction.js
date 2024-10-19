@@ -12,6 +12,9 @@ import {
   FETCH_TASK_DETAILS_REQUEST,
   FETCH_TASK_DETAILS_SUCCESS,
   FETCH_TASK_DETAILS_FAILURE,
+  DELETE_TASK_REQUEST,
+  DELETE_TASK_SUCCESS,
+  DELETE_TASK_FAILURE,
 } from "../actionTypes";
 
 export const createTask = (taskData) => {
@@ -69,7 +72,7 @@ export const fetchTasks = () => {
 };
 
 export const fetchTaskDetails = (task_sequence_id) => {
-  console.log(task_sequence_id);
+ 
   return async (dispatch) => {
     dispatch({ type: FETCH_TASK_DETAILS_REQUEST });
 
@@ -95,4 +98,32 @@ export const fetchTaskDetails = (task_sequence_id) => {
       });
     }
   };
+};
+
+export const deleteTask = (task_id) => async (dispatch) => {
+  try {
+    dispatch({ type: DELETE_TASK_REQUEST });
+
+    const headers = {
+      "task-auth-token": Cookies.get("user_task_token"),
+    };
+
+    const response = await axios.post(
+      BASE_URL + "/task/del-task",
+      {task_id},
+      {
+        headers,
+      }
+    );
+    // console.log(response.data.meta.message,"response.data.meta.message")
+    dispatch({
+      type: DELETE_TASK_SUCCESS,
+      payload: response.data.meta.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: DELETE_TASK_FAILURE,
+      payload: error.message,
+    });
+  }
 };

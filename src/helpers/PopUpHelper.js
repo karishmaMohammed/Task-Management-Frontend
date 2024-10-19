@@ -4,6 +4,7 @@ import {
   toggleActivityPopUp,
   toggleNotificationPopUp,
   settingsPopUp,
+  commentsPopUp
 } from "../redux/actions/commonAction"; // Import your toggle action
 
 // Helper function to manage popup state and toggling
@@ -18,6 +19,10 @@ export const usePopup = () => {
   const isSettingPopUpOpen = useSelector(
     (state) => state.common.isSettingPopUpOpen
   );
+
+  const isCommentPopUpOpen = useSelector(
+    (state)=> state.common.isCommentPopUpOpen
+  )
   // Dispatch to toggle the popup state
   const dispatch = useDispatch();
 
@@ -33,13 +38,19 @@ export const usePopup = () => {
     dispatch(settingsPopUp());
   };
 
+  const handleCommentPopUpToggle = () => {
+    dispatch(commentsPopUp());
+  };
+
   // Return the state and the toggle function
   return {
     isActivityPopUpOpen,
     isNotificationPopUpOpen,
     isSettingPopUpOpen,
+    isCommentPopUpOpen,
     handleActivityPopUpToggle,
     handleNotificationPopUpToggle,
     handleSettingPopUpToggle,
+    handleCommentPopUpToggle,
   };
 };

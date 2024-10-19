@@ -14,7 +14,7 @@ import { BASE_URL } from "../../constant";
 import Cookies from "js-cookie";
 
 //need to add payload
-export const createComments = () => async (dispatch) => {
+export const createComments = ( comment_message, task_id) => async (dispatch) => {
   try {
     dispatch({ type: CREATE_COMMENT_REQUEST });
 
@@ -24,7 +24,7 @@ export const createComments = () => async (dispatch) => {
 
     const response = await axios.post(
       BASE_URL + "/comment/create-comment",
-      {},
+      { comment_message, task_id},
       {
         headers,
       }
@@ -32,7 +32,7 @@ export const createComments = () => async (dispatch) => {
 
     dispatch({
       type: CREATE_COMMENT_SUCCESS,
-      payload: response.data.data,
+      payload: response.data.meta.success,
     });
   } catch (error) {
     dispatch({

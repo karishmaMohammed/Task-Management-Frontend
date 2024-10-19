@@ -1,6 +1,6 @@
 
 // actions.js
-import { TOGGLE_ACTIVITY_POPUP, TOGGLE_NOTIFICATION_POPUP, SETTINGS_POPUP } from '../actionTypes';
+import { TOGGLE_ACTIVITY_POPUP, TOGGLE_NOTIFICATION_POPUP, SETTINGS_POPUP, COMMENT_POPUP } from '../actionTypes';
 
 export const toggleActivityPopUp = () => ({
   type: TOGGLE_ACTIVITY_POPUP,
@@ -13,3 +13,8 @@ export const toggleNotificationPopUp = () => ({
 export const settingsPopUp = () => ({
   type: SETTINGS_POPUP,
 });
+
+export const commentsPopUp = () => ({
+  type: COMMENT_POPUP,
+});
+
