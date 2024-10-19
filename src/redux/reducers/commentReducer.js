@@ -11,9 +11,9 @@ import {
   } from '../actionTypes';
   
   const initialState = {
-    loading: false,
+    commentLoading: false,
     comments: [],
-    error: null,
+    commentError: null,
     success: false
   };
   
@@ -24,26 +24,26 @@ import {
       case DELETE_COMMENT_REQUEST:
         return {
           ...state,
-          loading: true,
-          error: null,
+          commentLoading: true,
+          commentError: null,
         };
       case CREATE_COMMENT_SUCCESS:
         return {
           ...state,
-          loading: false,
+          commentLoading: false,
           comments: [...state.comments, action.payload], // Add new comment to the list
           success: action.payload,
         };
       case GET_COMMENT_SUCCESS:
         return {
           ...state,
-          loading: false,
+          commentLoading: false,
           comments: action.payload, // Set comments from the API
         };
       case DELETE_COMMENT_SUCCESS:
         return {
           ...state,
-          loading: false,
+          commentLoading: false,
           comments: state.comments.filter(comment => comment.id !== action.payload.id), // Remove deleted comment
         };
       case CREATE_COMMENT_FAILURE:
@@ -51,8 +51,8 @@ import {
       case DELETE_COMMENT_FAILURE:
         return {
           ...state,
-          loading: false,
-          error: action.payload, // Set error message
+          commentLoading: false,
+          commentError: action.payload, // Set commentError message
         };
       default:
         return state;

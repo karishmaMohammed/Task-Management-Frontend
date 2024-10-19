@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { getComments, deleteComments } from "../../redux/actions/commentsAction";
 import { fetchTaskDetails } from "../../redux/actions/taskAction"; // Import the Redux action
 import { FaEdit, FaSave } from "react-icons/fa"; // Added FaSave for the save icon
 import { CgAdd } from "react-icons/cg";
@@ -13,6 +14,7 @@ import DateContainer from "./DateContainer";
 import ActivitySideOpen from "./ActivitySideOpen";
 import { usePopup } from "../../helpers/PopUpHelper";
 import Loader from "../Loader/Loader";
+import { toast } from "react-toastify";
 import CommentPopUp from "./CommentPopUp";
 
 function TaskDetailsPage() {
@@ -27,9 +29,20 @@ function TaskDetailsPage() {
 
   const nav = useNavigate();
 
+  const toastStyle = {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    pauseOnHover: true,
+    draggable: true,
+  };
+
   // Redux hooks to dispatch action and select state
   const dispatch = useDispatch();
   const { taskDetails, loading, error } = useSelector((state) => state.tasks);
+  const { comments, commentLoading, success } = useSelector(
+    (state) => state.comment
+  );
 
   // State for managing edit mode and original values
   const [isTitleEditable, setIsTitleEditable] = useState(false);
@@ -53,6 +66,21 @@ function TaskDetailsPage() {
       setOriginalDescription(taskDetails.description || "No Description");
     }
   }, [taskDetails]);
+
+  useEffect(() => {
+    if (taskDetails) {
+      console.log(taskDetails?._id);
+      dispatch(getComments(taskDetails?._id));
+    }
+  }, [dispatch, taskDetails?._id]);
+
+  const handleDeleteComment = (comment_id) =>{
+    dispatch(deleteComments(comment_id))
+    if(success){
+      toast.success("Comment deleted successfully!", toastStyle);
+      dispatch(getComments(taskDetails?._id));
+    }
+  }
 
   // Save changes handlers
   const handleSaveTitle = () => {
@@ -79,8 +107,8 @@ function TaskDetailsPage() {
   };
 
   // Loading and Error states
-  if (loading) return <Loader />;
-  if (error) return <div>Error: {error}</div>;
+  if (loading || commentLoading) return <Loader />;
+ 
 
   const customStyles = {
     control: (provided) => ({
@@ -237,38 +265,20 @@ function TaskDetailsPage() {
           </div>
 
           {/* Comments Section */}
-          <div>Comments Section</div>
+          <div style={{ color: "#257180", fontSize: "24px" }}>Comments Section</div>
           <div className="details-field-comments">
-            <div className="details-field-comments-cont">
-              <span>
-                dnfhjdgdfghdfghjdfghdfhgdhdfghjdfghdfhgdhfgdhfg
-                dnfhjdgdfghdfghjdfghdfhgdhfgdhfg
-              </span>
-              <MdDelete />
-            </div>
-            <div className="details-field-comments-cont">
-              <span>
-                dnfhjdfghdfhgdhfgdhfgdnfhjdgdfghdfghjdfghdfhgdhfgdhfgdnfhjdgdfghdfghjdfghdfhgdhfgdhfg
-                dnfhjdgdfghdfghjdfghdfhgdhfgdhfg
-              </span>
-              <MdDelete />
-            </div>
-            <div className="details-field-comments-cont">
-              <span>
-                dnfhjdgdfghdfghjdfghdfhgdhfgdhfgdnfhjdfghdfhgdhfgdhfgdnfhjdgdfghdfghjdfghdfhgdhfgdhfg
-                dnfhjdgdfghdfghjdfghdfhgdhfgdhfg
-              </span>
-              <MdDelete />
-            </div>
-            <div className="details-field-comments-cont">
-              <span>
-                dnfhjdgdfghdfhgdhfgdhfgdnfhjdgdfghdfhgdhfgdhfg
-                dnfhjdgdfghdfghjdfghdfhgdhfgdhfg
-              </span>
-              <MdDelete />
-            </div>
-
-            {/* https://www.freepik.com/icon/time-management_562182#fromView=search&page=3&position=2&uuid=c795b95a-c669-477c-8978-1e6d960dbea6 */}
+            {comments?.length > 0 ? (
+              comments.map((comment) => (
+                <div key={comment._id} className="details-field-comments-cont">
+                  <span>{comment.comment_message}</span>
+                  <MdDelete
+                  onClick={() => handleDeleteComment(comment._id)} // Add delete functionality
+                  />
+                </div>
+              ))
+            ) : (
+              <div>No comments available</div>
+            )}
           </div>
         </div>
 

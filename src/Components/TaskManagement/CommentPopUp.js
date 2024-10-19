@@ -7,20 +7,21 @@ import { FaArrowRight } from "react-icons/fa6";
 import { usePopup } from "../../helpers/PopUpHelper";
 
 function CommentPopUp({ taskId }) {
-
   const { isCommentPopUpOpen, handleCommentPopUpToggle } = usePopup();
 
   const [comment, setComment] = useState("");
 
   const dispatch = useDispatch();
-  const { comments, loading, error, success } = useSelector((state) => state.comment);
+  const {loading, error, success } = useSelector(
+    (state) => state.comment
+  );
 
   const handleCreateComment = () => {
     dispatch(createComments(comment, taskId));
-    
-    if(success){
-        toast.success('Comment created successfully!', toastStyle);
-        handleCommentPopUpToggle()
+
+    if (success) {
+      toast.success("Comment created successfully!", toastStyle);
+      handleCommentPopUpToggle();
     }
   };
 
@@ -56,7 +57,12 @@ function CommentPopUp({ taskId }) {
           >
             Save
           </button>
-          <button className="change-logs-cance-btns" onClick={handleCommentPopUpToggle}>Cancel</button>
+          <button
+            className="change-logs-cance-btns"
+            onClick={handleCommentPopUpToggle}
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </div>

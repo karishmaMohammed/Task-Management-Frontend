@@ -42,7 +42,7 @@ export const createComments = ( comment_message, task_id) => async (dispatch) =>
   }
 };
 
-export const getComments = () => async (dispatch) => {
+export const getComments = (task_id) => async (dispatch) => {
   try {
     dispatch({ type: GET_COMMENT_REQUEST });
 
@@ -52,11 +52,12 @@ export const getComments = () => async (dispatch) => {
 
     const response = await axios.get(BASE_URL + "/comment/get-comment", {
       headers,
+      params: { task_id },
     });
 
     dispatch({
       type: GET_COMMENT_SUCCESS,
-      payload: response.data.data,
+      payload: response.data.data.comment_list,
     });
   } catch (error) {
     dispatch({
@@ -67,7 +68,7 @@ export const getComments = () => async (dispatch) => {
 };
 
 // need to take comment id
-export const deleteComments = () => async (dispatch) => {
+export const deleteComments = (comment_id) => async (dispatch) => {
   try {
     dispatch({ type: DELETE_COMMENT_REQUEST });
 
@@ -77,7 +78,7 @@ export const deleteComments = () => async (dispatch) => {
 
     const response = await axios.post(
       BASE_URL + "/comment/del-comment",
-      {},
+      {comment_id},
       {
         headers,
       }
@@ -85,7 +86,7 @@ export const deleteComments = () => async (dispatch) => {
 
     dispatch({
       type: DELETE_COMMENT_SUCCESS,
-      payload: response.data.data,
+      payload: response.data.meta.success,
     });
   } catch (error) {
     dispatch({
