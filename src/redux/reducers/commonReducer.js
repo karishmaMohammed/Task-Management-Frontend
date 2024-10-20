@@ -1,5 +1,5 @@
 // popupReducer.js
-import { TOGGLE_ACTIVITY_POPUP, TOGGLE_NOTIFICATION_POPUP, SETTINGS_POPUP, COMMENT_POPUP } from '../actionTypes';
+import { TOGGLE_ACTIVITY_POPUP, TOGGLE_NOTIFICATION_POPUP, SETTINGS_POPUP, COMMENT_POPUP, ACTIVITY_CHANGE_POPUP } from '../actionTypes';
 
 
 const initialState = {
@@ -7,6 +7,7 @@ const initialState = {
   isNotificationPopUpOpen: false,
   isSettingPopUpOpen : false,
   isCommentPopUpOpen: false,
+  isActivityChangePopUpOpen: false,
 };
 
 const popupReducer = (state = initialState, action) => {
@@ -30,6 +31,11 @@ const popupReducer = (state = initialState, action) => {
           return{
             ...state,
             isCommentPopUpOpen: !state.isCommentPopUpOpen,
+          }
+          case ACTIVITY_CHANGE_POPUP:
+          return{
+            ...state,
+            isActivityChangePopUpOpen: !state.isActivityChangePopUpOpen,
           }
     default:
       return state;

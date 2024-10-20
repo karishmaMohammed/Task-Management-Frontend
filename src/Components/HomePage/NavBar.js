@@ -41,7 +41,7 @@ function NavBar({ children}) {
   };
   return (
     <>
-      <div className="home-nav-container">
+      <div className={`home-nav-container ${mode ? "dark-mode" : "light-mode"}`}>
         <div className="app-name-features">
           <img
             src="https://cdn-icons-png.freepik.com/256/5030/5030196.png?ga=GA1.1.
@@ -81,7 +81,7 @@ function NavBar({ children}) {
           )}
         </div>
       </div>
-      {children}
+      {React.cloneElement(children, { mode })}
       {logInSignupPopUp && (
         <RegisterAndLogin
           type={action}

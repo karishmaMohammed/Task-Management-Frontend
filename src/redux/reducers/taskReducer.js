@@ -19,7 +19,8 @@ const initialState = {
   taskList: [],
   taskDetails: {}, // Added for task details
   error: '',
-  message:''
+  message:'',
+  subTaskData: []
 };
 
 const taskReducer = (state = initialState, action) => {
@@ -69,7 +70,8 @@ const taskReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        taskDetails: action.payload, // Store the fetched task details
+        taskDetails: action.payload.taskDetails,
+        subTaskData: action.payload.subTaskData
       };
     case FETCH_TASK_DETAILS_FAILURE:
       return {

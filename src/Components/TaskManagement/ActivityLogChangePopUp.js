@@ -1,27 +1,37 @@
-import React from 'react'
+import React from "react";
 import { FaArrowRight } from "react-icons/fa6";
+import { usePopup } from "../../helpers/PopUpHelper";
 
-function ActivityLogChangePopUp() {
+function ActivityLogChangePopUp({prevData, newData}) {
+  const { isActivityChangePopUpOpen, handleActivityChangePopUpToggle } =
+    usePopup();
   return (
-    <div className='change-logs'>
-        <div className='change-logs-cont'>
-            <div className='change-logs-head'>
-                <span>Changes made</span>
+    <>
+      {isActivityChangePopUpOpen && (
+        <div className="change-logs">
+          <div className="change-logs-cont">
+            <div className="change-logs-head">
+              <span>Changes made</span>
             </div>
-            <div className='change-logs-content'>
-                <span style={{textAlign:'left'}}>Initial data</span>
-                <FaArrowRight/>
-                <span style={{textAlign:'left'}}>Changed data</span>
+            <div className="change-logs-content">
+              <span style={{ textAlign: "left" }}>{prevData.value}</span>
+              <FaArrowRight />
+              <span style={{ textAlign: "left" }}>{newData.value}</span>
             </div>
-            <div className='change-logs-btns'>
-                <button className='change-logs-save-btns'>
-                    Change
-                </button >
-                <button className='change-logs-cance-btns'>Cancel</button>
+            <div className="change-logs-btns">
+              <button className="change-logs-save-btns">Change</button>
+              <button
+                className="change-logs-cance-btns"
+                onClick={handleActivityChangePopUpToggle}
+              >
+                Cancel
+              </button>
             </div>
+          </div>
         </div>
-    </div>
-  )
+      )}
+    </>
+  );
 }
 
-export default ActivityLogChangePopUp
+export default ActivityLogChangePopUp;

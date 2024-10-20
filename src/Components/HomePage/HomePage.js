@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 import upArrow from "../../Assets/ArrowUpRight.png";
 
 
-function HomePage() {
+function HomePage({ mode }) {
   
   const nav = useNavigate();
 
@@ -27,7 +27,7 @@ function HomePage() {
   
   };
   return (
-    <div className="home-page-container">
+    <div className={`home-page-container ${mode ? "dark-mode" : "light-mode"}`}>
       <div className="home-page">
         <div className="home-page-text">
           <span className="home-page-text-head">TASK MANAGEMENT</span>

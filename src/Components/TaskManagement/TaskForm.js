@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./TaskManagement.css";
 import { FaTextWidth } from "react-icons/fa6";
+import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { CiLink } from "react-icons/ci";
 import { BsTextParagraph } from "react-icons/bs";
@@ -63,7 +64,7 @@ function TaskForm() {
     priority: "",
     due_date: "",
   });
-
+  const { task_id} = useParams()
   const dispatch = useDispatch();
   const { loading, error, success, taskList } = useSelector((state) => state.tasks);
   
@@ -168,7 +169,7 @@ function TaskForm() {
       due_date: defaultFormData.due_date,
       priority: defaultFormData.priority,
       custom_data: JSON.stringify(formattedData), // send formattedData to API
-      main_task_seq_id: 1, // Use relevant value for main_task_seq_id
+      main_task_seq_id: task_id ? task_id : '', // Use relevant value for main_task_seq_id
     }));
 
     if(taskList.length){

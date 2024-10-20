@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getComments, deleteComments } from "../../redux/actions/commentsAction";
+import {
+  getComments,
+  deleteComments,
+} from "../../redux/actions/commentsAction";
 import { fetchTaskDetails } from "../../redux/actions/taskAction"; // Import the Redux action
 import { FaEdit, FaSave } from "react-icons/fa"; // Added FaSave for the save icon
 import { CgAdd } from "react-icons/cg";
@@ -10,12 +13,16 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "./TaskManagement.css";
 import Select from "react-select";
+import Cookies from "js-cookie";
+import axios from "axios";
+import { BASE_URL } from "../../constant";
 import DateContainer from "./DateContainer";
 import ActivitySideOpen from "./ActivitySideOpen";
 import { usePopup } from "../../helpers/PopUpHelper";
 import Loader from "../Loader/Loader";
 import { toast } from "react-toastify";
 import CommentPopUp from "./CommentPopUp";
+import ActivityLogChangePopUp from "./ActivityLogChangePopUp";
 
 function TaskDetailsPage() {
   const { task_sequence_id } = useParams();
@@ -25,6 +32,8 @@ function TaskDetailsPage() {
     handleActivityPopUpToggle,
     isCommentPopUpOpen,
     handleCommentPopUpToggle,
+    isActivityChangePopUpOpen,
+    handleActivityChangePopUpToggle,
   } = usePopup();
 
   const nav = useNavigate();
@@ -39,10 +48,58 @@ function TaskDetailsPage() {
 
   // Redux hooks to dispatch action and select state
   const dispatch = useDispatch();
-  const { taskDetails, loading, error } = useSelector((state) => state.tasks);
+  const { taskDetails, loading, error, subTaskData } = useSelector(
+    (state) => state.tasks
+  );
   const { comments, commentLoading, success } = useSelector(
     (state) => state.comment
   );
+  const [fieldsValues, setFieldsValues] = useState({});
+  const [currentPriority, setCurrentPriority] = useState(null);
+  const [prevObject, setPreviousObject] = useState({});
+  const [newObject, setNewObject] = useState({});
+  const [isFieldEditing, setIsFieldEditing] = useState({}); // To track which field is being edited
+  const [previousTitle, setPreviousTitle] = useState(taskDetails?.task_title);
+
+  const handleSaveTitle = () => {
+    setPreviousObject({
+      display_name: "Task title",
+      value: taskDetails?.task_title,
+    });
+    setNewObject({
+      display_name: "Task title",
+      value: editedTitle,
+    });
+
+    setIsTitleEditable(false);
+  };
+
+  const handleSaveCustomData = (display_name, value, prevValue) => {
+    setPreviousObject({
+      display_name: display_name,
+      value: prevValue,
+    });
+    setNewObject({
+      display_name: display_name,
+      value: value,
+    });
+  };
+
+  // Handle input change
+  const handleCustomChange = (e, fieldName) => {
+    setFieldsValues({
+      ...fieldsValues,
+      [fieldName]: e.target.value,
+    });
+  };
+
+  // Handle edit toggle
+  const toggleFieldEditing = (fieldName) => {
+    setIsFieldEditing({
+      ...isFieldEditing,
+      [fieldName]: !isFieldEditing[fieldName],
+    });
+  };
 
   // State for managing edit mode and original values
   const [isTitleEditable, setIsTitleEditable] = useState(false);
@@ -64,6 +121,17 @@ function TaskDetailsPage() {
       setEditedDescription(taskDetails.description || "No Description");
       setOriginalTitle(taskDetails.task_title || "Default Title");
       setOriginalDescription(taskDetails.description || "No Description");
+      setCurrentPriority(taskDetails.priority);
+      if (taskDetails?.custom_data) {
+        setFieldsValues(
+          Object.keys(taskDetails.custom_data).reduce((acc, key) => {
+            acc[key] = taskDetails.custom_data[key]?.value || ""; // Safely access value
+            return acc;
+          }, {})
+        );
+      } else {
+        setFieldsValues({}); // Default to an empty object if custom_data is undefined
+      }
     }
   }, [taskDetails]);
 
@@ -74,25 +142,30 @@ function TaskDetailsPage() {
     }
   }, [dispatch, taskDetails?._id]);
 
-  const handleDeleteComment = (comment_id) =>{
-    dispatch(deleteComments(comment_id))
-    if(success){
+  const handleDeleteComment = (comment_id) => {
+    dispatch(deleteComments(comment_id));
+    if (success) {
       toast.success("Comment deleted successfully!", toastStyle);
       dispatch(getComments(taskDetails?._id));
     }
-  }
-
-  // Save changes handlers
-  const handleSaveTitle = () => {
-    setIsTitleEditable(false);
-    setOriginalTitle(editedTitle); // Update the original title after saving
-    // Optionally: dispatch an action to save the updated title
   };
 
+  // Save changes handlers
+  // const handleSaveTitle = () => {
+  //   setIsTitleEditable(false);
+  //   setOriginalTitle(editedTitle);
+  // };
+
   const handleSaveDescription = () => {
+    setPreviousObject({
+      display_name: "Task description",
+      value: taskDetails?.description,
+    });
+    setNewObject({
+      display_name: "Task description",
+      value: editedDescription,
+    });
     setIsDescriptionEditable(false);
-    setOriginalDescription(editedDescription); // Update the original description after saving
-    // Optionally: dispatch an action to save the updated description
   };
 
   // Cancel changes handlers
@@ -108,7 +181,6 @@ function TaskDetailsPage() {
 
   // Loading and Error states
   if (loading || commentLoading) return <Loader />;
- 
 
   const customStyles = {
     control: (provided) => ({
@@ -122,6 +194,21 @@ function TaskDetailsPage() {
     }),
   };
 
+  const handleChangePriority = () => {
+    
+    setPreviousObject({
+      display_name:'Priority',
+      value: taskDetails?.priority === true ? 'Prior' : 'Non Prior'
+    })
+    
+    setNewObject({
+       display_name:'Priority',
+      value: taskDetails?.priority === false ? 'Prior' : 'Non Prior'
+    })
+    handleActivityChangePopUpToggle();
+    
+  };
+
   return (
     <>
       <div
@@ -133,33 +220,57 @@ function TaskDetailsPage() {
           <div className="details-field-title">
             <div className="details-value-title">
               {isTitleEditable ? (
-                <>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    width: "100%",
+                  }}
+                >
+                  <span style={{ color: "#257180", fontSize: "24px" }}>
+                    Task Title:{" "}
+                  </span>
                   <textarea
                     type="text"
                     value={editedTitle}
                     onChange={(e) => setEditedTitle(e.target.value)}
-                    style={{ maxWidth: "95%" }}
+                    style={{
+                      width: "50%",
+                      marginBottom: "10px",
+                      fontSize: "14px",
+                    }}
                   />
-                  <FaSave
-                    className="edit-icon"
-                    style={{ width: "20px", height: "20px" }}
-                    onClick={handleSaveTitle}
-                  />
-                  <MdCancel
-                    className="edit-icon"
-                    style={{ width: "20px", height: "20px", marginLeft: "8px" }}
-                    onClick={handleCancelTitle}
-                  />
-                </>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <button
+                      className="save-btn save"
+                      onClick={() => {
+                        handleSaveTitle();
+                        handleActivityChangePopUpToggle();
+                      }}
+                    >
+                      Save
+                    </button>
+                    <button
+                      className="cancel-btn cancel"
+                      onClick={handleCancelTitle}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
               ) : (
-                <>
-                  <span style={{ maxWidth: "95%" }}>{editedTitle}</span>
+                <div>
+                  <span style={{ color: "#257180", fontSize: "24px" }}>
+                    Task Title:{" "}
+                  </span>
+                  <br />
+                  <span style={{ maxWidth: "95%" }}>{editedTitle}</span>&nbsp;
                   <FaEdit
                     className="edit-icon"
-                    style={{ width: "20px", height: "20px" }}
+                    style={{ width: "20px", height: "20px", color: "blue" }}
                     onClick={() => setIsTitleEditable(true)}
                   />
-                </>
+                </div>
               )}
             </div>
           </div>
@@ -184,8 +295,9 @@ function TaskDetailsPage() {
                     className="priority-color"
                     style={{
                       backgroundColor:
-                        taskDetails?.priority === "High" ? "red" : "blue",
+                        currentPriority === true ? "green" : "gray",
                     }}
+                    onClick={handleChangePriority}
                   />
                 </div>
                 <div className="details-field-priority">
@@ -206,35 +318,56 @@ function TaskDetailsPage() {
 
               <div className="details-field-title">
                 {isDescriptionEditable ? (
-                  <>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      width: "100%",
+                    }}
+                  >
+                    <span style={{ color: "#257180", fontSize: "24px" }}>
+                      Task Description:{" "}
+                    </span>
                     <textarea
                       value={editedDescription}
                       onChange={(e) => setEditedDescription(e.target.value)}
+                      style={{ marginBottom: "10px", fontSize: "14px" }}
                     />
-                    <FaSave
-                      className="edit-icon"
-                      style={{ width: "20px", height: "20px" }}
-                      onClick={handleSaveDescription}
-                    />
-                    <MdCancel
-                      className="edit-icon"
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        marginLeft: "8px",
-                      }}
-                      onClick={handleCancelDescription}
-                    />
-                  </>
+                    <div style={{ display: "flex" }}>
+                      <button
+                        className="save-btn save"
+                        onClick={() => {
+                          handleSaveDescription();
+                          handleActivityChangePopUpToggle();
+                        }}
+                      >
+                        Save
+                      </button>
+                      <button
+                        className="cancel-btn cancel"
+                        onClick={handleCancelDescription}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
                 ) : (
-                  <>
-                    <textarea disabled value={editedDescription} />
-                    <FaEdit
-                      className="edit-icon"
-                      style={{ width: "20px", height: "20px" }}
-                      onClick={() => setIsDescriptionEditable(true)}
-                    />
-                  </>
+                  <div style={{ width: "100%" }}>
+                    <span style={{ color: "#257180", fontSize: "24px" }}>
+                      Task Description:{" "}
+                    </span>
+                    <div style={{ display: "flex", width: "100%" }}>
+                      <span style={{ fontSize: "20px" }}>
+                        {editedDescription}
+                      </span>{" "}
+                      &nbsp;
+                      <FaEdit
+                        className="edit-icon"
+                        style={{ width: "20px", height: "20px", color: "blue" }}
+                        onClick={() => setIsDescriptionEditable(true)}
+                      />
+                    </div>
+                  </div>
                 )}
               </div>
 
@@ -244,35 +377,76 @@ function TaskDetailsPage() {
                   <span>Sub tasks</span>
                   <CgAdd
                     className="sub-tasks-add"
-                    onClick={() => nav("/task-form")}
+                    onClick={() => nav(`/task-form/${task_sequence_id}`)}
                   />
                 </div>
                 <div className="sub-tasks-rows">
                   <div className="sub-tasks-rows-cont">
-                    <span>title</span>
-                    <span>due date</span>
-                    <span>priority</span>
+                    <span>Task ID</span>
+                    <span>Task Title</span>
+                    <span>Due Date</span>
+                    <span>Task Status</span>
                   </div>
-                  {/* Repeat sub-task rows */}
+                  {/* Dynamically map over taskdetails.table */}
+
+                  {subTaskData && subTaskData.length > 0 ? (
+                    subTaskData.map((item) => (
+                      <div
+                        className="sub-tasks-rows-cont"
+                        key={item._id}
+                        onClick={() =>
+                          nav(`/task-details/${item.task_sequence_id}`)
+                        }
+                      >
+                        <span>{item.task_sequence_id}</span>
+                        <span>{item.task_title}</span>
+
+                        <span>{item.due_date}</span>
+
+                        <span>{item.task_status}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <div
+                      className="no-data-message"
+                      style={{
+                        display: "flex",
+                        gap: "10px",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      Create sub-tasks.
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
 
             {/* Date Container */}
             <div className="details-field-details-div-right">
-              <DateContainer tasks={[taskDetails?.due_date]} />
+              {/* <DateContainer
+                task={{
+                  id: 1,
+                  name: '',
+                  due_date: taskDetails?.due_date, // This is the due date string
+                }}
+                onUpdateDueDate={(newDate) => console.log('New Due Date:', newDate)}
+              /> */}
             </div>
           </div>
 
           {/* Comments Section */}
-          <div style={{ color: "#257180", fontSize: "24px" }}>Comments Section</div>
+          <div style={{ color: "#257180", fontSize: "24px" }}>
+            Comments Section
+          </div>
           <div className="details-field-comments">
             {comments?.length > 0 ? (
               comments.map((comment) => (
                 <div key={comment._id} className="details-field-comments-cont">
                   <span>{comment.comment_message}</span>
                   <MdDelete
-                  onClick={() => handleDeleteComment(comment._id)} // Add delete functionality
+                    onClick={() => handleDeleteComment(comment._id)} // Add delete functionality
                   />
                 </div>
               ))
@@ -294,14 +468,112 @@ function TaskDetailsPage() {
           </div>
           <div className="details-right">
             <div className="details-right-top">
-              <span style={{ color: "#257180", fontSize: "28px" }}>
+              <span
+                style={{
+                  color: "#257180",
+                  fontSize: "28px",
+                  borderBottom: "1px solid black",
+                }}
+              >
                 Dropped Fields
               </span>
+              <div style={{ marginTop: "20px" }}>
+                {taskDetails?.custom_data &&
+                  Object.keys(taskDetails.custom_data).map((key) => {
+                    const field = taskDetails.custom_data[key];
+                    return !field.is_default ? (
+                      <div className="details-right-row" key={field._id}>
+                        <span>{field.display_name}</span>
+                        {isFieldEditing[field.display_name] ? (
+                          <div
+                            className="details-right-edit-row"
+                            style={{ width: "100%" }}
+                          >
+                            {field.input_type === "text" && (
+                              <input
+                                className="details-right-input"
+                                type="text"
+                                value={fieldsValues[field.display_name]}
+                                onChange={(e) =>
+                                  handleCustomChange(e, field.display_name)
+                                }
+                              />
+                            )}
+                            {field.input_type === "link" && (
+                              <input
+                                className="details-right-input"
+                                type="url"
+                                value={fieldsValues[field.display_name]}
+                                placeholder="Enter URL"
+                                onChange={(e) =>
+                                  handleCustomChange(e, field.display_name)
+                                }
+                              />
+                            )}
+                            {field.input_type === "number" && (
+                              <input
+                                className="details-right-input"
+                                type="number"
+                                value={fieldsValues[field.display_name]}
+                                onChange={(e) =>
+                                  handleCustomChange(e, field.display_name)
+                                }
+                              />
+                            )}
+                            <br />
+                            {/* Save and Cancel Buttons */}
+                            <button
+                              className="save-btn save"
+                              onClick={() =>{
+                                handleSaveCustomData(
+                                  field.display_name,
+                                  fieldsValues[field.display_name],
+                                  field.value
+                                );
+                                handleActivityChangePopUpToggle()
+                              }
+                                
+                              }
+                            >
+                              Save
+                            </button>
+                            <button
+                              className="cancel-btn cancel"
+                              onClick={() =>
+                                toggleFieldEditing(field.display_name)
+                              }
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="details-right-display-row">
+                            {fieldsValues[field.display_name]} &nbsp;
+                            <FaEdit
+                              className="edit-icon"
+                              style={{
+                                width: "20px",
+                                height: "20px",
+                                color: "blue",
+                              }}
+                              onClick={() =>
+                                toggleFieldEditing(field.display_name)
+                              }
+                            />
+                          </div>
+                        )}
+                      </div>
+                    ) : null;
+                  })}
+              </div>
             </div>
           </div>
         </div>
       </div>
       {/* Activity Side Panel */}
+      {isActivityChangePopUpOpen && (
+        <ActivityLogChangePopUp prevData={prevObject} newData={newObject} />
+      )}
       {isActivityPopUpOpen && <ActivitySideOpen />}
       {isCommentPopUpOpen && <CommentPopUp taskId={taskDetails?._id} />}{" "}
       {/* Show CommentPopUp when true */}

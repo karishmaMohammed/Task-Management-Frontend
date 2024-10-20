@@ -3,42 +3,37 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'; // Import the default Calendar CSS
 import './TaskManagement.css'; // Import the custom CSS file
 
-const DateContainer = ({ tasks, onUpdateDueDate }) => {
-  const [date, setDate] = useState(new Date()); // State to manage the selected date
+const DateContainer = ({ task, onUpdateDueDate }) => {
+  const [date, setDate] = useState(new Date(task.due_date)); // Initialize with the task's due date
 
   // Handle date changes
   const handleDateChange = (newDate) => {
-    setDate(newDate);
+    setDate(newDate); // Update the single date value
+    onUpdateDueDate(newDate.toISOString().split('T')[0]); // Convert the new date to 'YYYY-MM-DD' format
   };
 
-  // Handle task selection on the calendar
-  const handleTaskSelect = (taskId) => {
-    const task = tasks.find((t) => t.id === taskId);
-    if (task) {
-      const newDueDate = prompt('Enter new due date (YYYY-MM-DD):', task.dueDate.toISOString().split('T')[0]);
-      if (newDueDate) {
-        onUpdateDueDate(taskId, new Date(newDueDate)); // Update the due date
-      }
+  // Handle task update on calendar
+  const handleTaskSelect = () => {
+    const newDueDate = prompt('Enter new due date (YYYY-MM-DD):', task.due_date);
+    if (newDueDate) {
+      onUpdateDueDate(newDueDate); // Update due date with new input
     }
   };
 
   return (
     <div className="calendar-container">
-        <span>Due Date</span>
+      <span>Due Date</span>
       <Calendar
         onChange={handleDateChange}
-        value={date}
+        value={new Date(task.due_date)} // Display the task's current due date
         tileContent={({ date, view }) => {
-          const tasksForDate = tasks.filter((task) => new Date(task.dueDate).toDateString() === date.toDateString());
+          // Check if the task's due date matches the calendar date
+          const isTaskDue = new Date(task.due_date).toDateString() === date.toDateString();
           return (
             <div>
-              {tasksForDate.length > 0 && (
-                <div>
-                  {tasksForDate.map((task) => (
-                    <div key={task.id} onClick={() => handleTaskSelect(task.id)} className="task-tile">
-                      {task.name}
-                    </div>
-                  ))}
+              {isTaskDue && (
+                <div onClick={handleTaskSelect} className="task-tile">
+                  {task.name} {/* Display task name if due on this date */}
                 </div>
               )}
             </div>

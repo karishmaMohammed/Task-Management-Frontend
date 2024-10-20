@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./HomePage.css";
 import Notification from "../Notification/Notification";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllNotifications } from "../../redux/actions/notificationsAction"; // Import action creators
+// import { fetchAllNotifications } from "../../redux/actions/notificationsAction"; // Import action creators
 import { usePopup } from "../../helpers/PopUpHelper";
 import SettingsPopUp from "../Settings/SettingsPopUp";
 
@@ -15,11 +15,11 @@ function LoggedInNavPage() {
   } = usePopup();
 
   const dispatch = useDispatch();
-  const { activePage } = useSelector((state) => state.notifications);
+  // const { activePage } = useSelector((state) => state.notifications);
 
-  const getNotifications = () => {
-    dispatch(fetchAllNotifications(activePage));
-  };
+  // const getNotifications = () => {
+  //   dispatch(fetchAllNotifications(activePage));
+  // };
 
   // const [openNotiofications, setOpenNotifications] = useState(false);
   const [notificationCount, setNotificationCount] = useState("");
@@ -38,7 +38,7 @@ function LoggedInNavPage() {
           <img
             onClick={() => {
               handleNotificationPopUpToggle();
-              getNotifications();
+              // getNotifications();
             }}
             src="https://cdn-icons-png.freepik.com/256/1156/1156949.png?ga=GA1.1.706441703.1694584519&semt=ais_hybrid"
             alt="notification"

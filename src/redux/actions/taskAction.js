@@ -87,7 +87,10 @@ export const fetchTaskDetails = (task_sequence_id) => {
 
       dispatch({
         type: FETCH_TASK_DETAILS_SUCCESS,
-        payload: response.data.data.task_details,
+        payload: {
+          taskDetails: response.data.data.task_details,
+          subTaskData: response.data.data.sub_task,
+        },
       });
     } catch (error) {
       dispatch({

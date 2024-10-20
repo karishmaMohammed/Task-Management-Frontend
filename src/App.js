@@ -81,6 +81,14 @@ function App() {
               </SideBarAndNav>
             }
           />
+           <Route
+            path="/task-form/:task_id"
+            element={
+              <SideBarAndNav>
+                <TaskForm />
+              </SideBarAndNav>
+            }
+          />
 
           <Route path="/home-nav" element={<NavBar />} />
         </Routes>
