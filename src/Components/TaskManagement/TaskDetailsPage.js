@@ -4,6 +4,9 @@ import {
   getComments,
   deleteComments,
 } from "../../redux/actions/commentsAction";
+import Cookies from "js-cookie";
+import axios from "axios";
+import { BASE_URL } from "../../constant";
 import { fetchTaskDetails } from "../../redux/actions/taskAction"; // Import the Redux action
 import { FaEdit, FaSave } from "react-icons/fa"; // Added FaSave for the save icon
 import { CgAdd } from "react-icons/cg";
@@ -13,9 +16,6 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "./TaskManagement.css";
 import Select from "react-select";
-import Cookies from "js-cookie";
-import axios from "axios";
-import { BASE_URL } from "../../constant";
 import DateContainer from "./DateContainer";
 import ActivitySideOpen from "./ActivitySideOpen";
 import { usePopup } from "../../helpers/PopUpHelper";
@@ -26,6 +26,8 @@ import ActivityLogChangePopUp from "./ActivityLogChangePopUp";
 
 function TaskDetailsPage() {
   const { task_sequence_id } = useParams();
+  const [keyValuePair,setKeyValuePair] = useState({})
+  const [isCustomData, setIsCustomData] = useState(false);
 
   const {
     isActivityPopUpOpen,
@@ -61,13 +63,16 @@ function TaskDetailsPage() {
   const [isFieldEditing, setIsFieldEditing] = useState({}); // To track which field is being edited
   const [previousTitle, setPreviousTitle] = useState(taskDetails?.task_title);
 
-  const handleSaveTitle = () => {
+  const handleSaveTitle = (key) => {
+    setKeyValuePair({
+      [key]: editedTitle,
+    })
     setPreviousObject({
-      display_name: "Task title",
+      display_name: key,
       value: taskDetails?.task_title,
     });
     setNewObject({
-      display_name: "Task title",
+      display_name: key,
       value: editedTitle,
     });
 
@@ -91,6 +96,7 @@ function TaskDetailsPage() {
       ...fieldsValues,
       [fieldName]: e.target.value,
     });
+    setIsCustomData(true);
   };
 
   // Handle edit toggle
@@ -137,7 +143,6 @@ function TaskDetailsPage() {
 
   useEffect(() => {
     if (taskDetails) {
-     
       dispatch(getComments(taskDetails?._id));
     }
   }, [dispatch, taskDetails?._id]);
@@ -155,8 +160,27 @@ function TaskDetailsPage() {
   //   setIsTitleEditable(false);
   //   setOriginalTitle(editedTitle);
   // };
+  const handleGetActivityLogs = async () => {
+    try {
+      const headers = {
+        "task-auth-token": Cookies.get("user_task_token"),
+      };
+      const response = await axios.get(
+        `${BASE_URL}/notification/get-task-acti-logs`,
+        {
+          headers,
+        }
+      );
+      console.log(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  const handleSaveDescription = () => {
+  const handleSaveDescription = (key) => {
+    setKeyValuePair({
+      [key]: editedDescription,
+    })
     setPreviousObject({
       display_name: "Task description",
       value: taskDetails?.description,
@@ -194,19 +218,20 @@ function TaskDetailsPage() {
     }),
   };
 
-  const handleChangePriority = () => {
-    
+  const handleChangePriority = (key) => {
+    setKeyValuePair({
+      [key]: taskDetails?.priority === false ? true : false,
+    })
     setPreviousObject({
-      display_name:'Priority',
-      value: taskDetails?.priority === true ? 'Prior' : 'Non Prior'
-    })
-    
+      display_name: "Priority",
+      value: taskDetails?.priority === true ? "Prior" : "Non Prior",
+    });
+
     setNewObject({
-       display_name:'Priority',
-      value: taskDetails?.priority === false ? 'Prior' : 'Non Prior'
-    })
+      display_name: "Priority",
+      value: taskDetails?.priority === false ? "Prior" : "Non Prior",
+    });
     handleActivityChangePopUpToggle();
-    
   };
 
   return (
@@ -244,7 +269,7 @@ function TaskDetailsPage() {
                     <button
                       className="save-btn save"
                       onClick={() => {
-                        handleSaveTitle();
+                        handleSaveTitle('task_title');
                         handleActivityChangePopUpToggle();
                       }}
                     >
@@ -297,7 +322,7 @@ function TaskDetailsPage() {
                       backgroundColor:
                         currentPriority === true ? "green" : "gray",
                     }}
-                    onClick={handleChangePriority}
+                    onClick={()=>handleChangePriority('priority')}
                   />
                 </div>
                 <div className="details-field-priority">
@@ -311,7 +336,7 @@ function TaskDetailsPage() {
                     ]}
                     value={{ label: taskDetails?.task_status || "To Do" }}
                     styles={customStyles}
-                    onChange={handleCommentPopUpToggle} // Open the pop-up on status change
+                    onChange={()=>handleCommentPopUpToggle('status')} // Open the pop-up on status change
                   />
                 </div>
               </div>
@@ -337,7 +362,7 @@ function TaskDetailsPage() {
                       <button
                         className="save-btn save"
                         onClick={() => {
-                          handleSaveDescription();
+                          handleSaveDescription('description');
                           handleActivityChangePopUpToggle();
                         }}
                       >
@@ -460,7 +485,10 @@ function TaskDetailsPage() {
         <div className="details-right-cont">
           <div className="details-right-cont-top">
             <img
-              onClick={handleActivityPopUpToggle}
+              onClick={() => {
+                handleActivityPopUpToggle();
+                handleGetActivityLogs();
+              }}
               title="Activity logs"
               src="https://cdn-icons-png.freepik.com/256/562/562182.png?ga=GA1.2.1462843302.1696500966&semt=ais_hybrid"
               alt="Activity Icon"
@@ -524,16 +552,14 @@ function TaskDetailsPage() {
                             {/* Save and Cancel Buttons */}
                             <button
                               className="save-btn save"
-                              onClick={() =>{
+                              onClick={() => {
                                 handleSaveCustomData(
                                   field.display_name,
                                   fieldsValues[field.display_name],
                                   field.value
                                 );
-                                handleActivityChangePopUpToggle()
-                              }
-                                
-                              }
+                                handleActivityChangePopUpToggle();
+                              }}
                             >
                               Save
                             </button>
@@ -572,7 +598,13 @@ function TaskDetailsPage() {
       </div>
       {/* Activity Side Panel */}
       {isActivityChangePopUpOpen && (
-        <ActivityLogChangePopUp prevData={prevObject} newData={newObject} />
+        <ActivityLogChangePopUp
+          prevData={prevObject}
+          newData={newObject}
+          customData={isCustomData}
+          taskId={taskDetails?._id}
+          keyValuePair={keyValuePair}
+        />
       )}
       {isActivityPopUpOpen && <ActivitySideOpen />}
       {isCommentPopUpOpen && <CommentPopUp taskId={taskDetails?._id} />}{" "}
