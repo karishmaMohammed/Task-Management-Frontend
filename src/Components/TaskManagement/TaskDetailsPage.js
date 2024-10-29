@@ -137,7 +137,7 @@ function TaskDetailsPage() {
 
   useEffect(() => {
     if (taskDetails) {
-      console.log(taskDetails?._id);
+     
       dispatch(getComments(taskDetails?._id));
     }
   }, [dispatch, taskDetails?._id]);

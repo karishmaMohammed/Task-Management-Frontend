@@ -8,6 +8,15 @@ import { usePopup } from '../../helpers/PopUpHelper';
 function ActivitySideOpen() {
  
   const { isActivityPopUpOpen, handleActivityPopUpToggle } = usePopup();
+
+  const handleActivityLogs = async() => {
+    try {
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <>
       {isActivityPopUpOpen && (

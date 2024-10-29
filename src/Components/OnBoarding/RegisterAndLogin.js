@@ -66,8 +66,7 @@ function RegisterAndLogin({ type, onclose, setTokenValue }) {
   const memberDetails = JSON.parse(parsedState.member);
   const fullName = memberDetails.member_details.full_name;
   const notificationCount = memberDetails.notification_count;
-  console.log(fullName); // "Mohammed Karishma"
-  console.log(notificationCount); // 0
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
