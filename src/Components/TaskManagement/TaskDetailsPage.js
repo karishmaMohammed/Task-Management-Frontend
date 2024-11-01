@@ -28,6 +28,7 @@ function TaskDetailsPage() {
   const { task_sequence_id } = useParams();
   const [keyValuePair,setKeyValuePair] = useState({})
   const [isCustomData, setIsCustomData] = useState(false);
+  const [activityData, setActivityData] = useState([]);
 
   const {
     isActivityPopUpOpen,
@@ -169,13 +170,17 @@ function TaskDetailsPage() {
         `${BASE_URL}/notification/get-task-acti-logs`,
         {
           headers,
+          params: {
+            task_id: taskDetails?._id,
+          },
         }
       );
-      console.log(response.data.data);
+      setActivityData(response.data.data.task_activity_logs);
     } catch (error) {
       console.log(error);
     }
   };
+  
 
   const handleSaveDescription = (key) => {
     setKeyValuePair({
@@ -606,7 +611,7 @@ function TaskDetailsPage() {
           keyValuePair={keyValuePair}
         />
       )}
-      {isActivityPopUpOpen && <ActivitySideOpen />}
+      {isActivityPopUpOpen && <ActivitySideOpen activityData={activityData} />}
       {isCommentPopUpOpen && <CommentPopUp taskId={taskDetails?._id} />}{" "}
       {/* Show CommentPopUp when true */}
     </>

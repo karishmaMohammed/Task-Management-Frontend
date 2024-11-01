@@ -22,11 +22,15 @@ function ActivityLogChangePopUp({ prevData, newData, customData, taskId,keyValue
        response = await axios.post(`${BASE_URL}/task/edit-def-task-details`, 
           {updateData:keyValuePair, task_id : taskId, prev_obj: prevData, new_obj: newData},{headers});
       }
-        console.log(response.data.meta.message);
+        console.log(response.data.meta.success);
+        if(response.data.meta.success){
+          handleActivityChangePopUpToggle()
+        }
     } catch (error) {
       console.log(error);
     }
   };
+  
   return (
     <>
       {isActivityChangePopUpOpen && (

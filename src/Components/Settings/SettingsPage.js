@@ -6,6 +6,7 @@ import {
   changePassword,
 } from "../../redux/actions/settingsAction";
 import { toast } from "react-toastify";
+import './Setting.css'
 
 function SettingsPage() {
   const [selectedSection, setSelectedSection] = useState("general");
@@ -22,8 +23,8 @@ function SettingsPage() {
     password: "",
     confirmPassword: "",
   });
-  console.log(formData, "formData");
-  // Fetch profile information from Redux and update the form state
+ 
+ 
   useEffect(() => {
     dispatch(getProfileInfo());
   }, [dispatch]);
@@ -195,7 +196,7 @@ function SettingsPage() {
           </div>
 
           <div className="setting-save-btn">
-            <button onClick={handleProfileSave}>Save</button>
+            <button onClick={handleProfileSave} className="save-btn save">Save</button>
           </div>
         </>
       )}
@@ -234,6 +235,7 @@ function SettingsPage() {
           <div className="setting-save-btn">
             <button
             onClick={handlePasswordSave}
+            className="save-btn save"
             >
               Change Password
             </button>

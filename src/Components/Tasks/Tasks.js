@@ -80,7 +80,7 @@ function Tasks() {
   return (
     <div style={{ marginTop: "5%", marginLeft: "15%", width: "100%" }}>
       <div className="upper-section">
-        <span>Your Task List</span>
+        <span style={{ color: "#257180", fontSize: "24px" }}>Your Task List</span>
         <div className="search-new-task">
           <div className="task-search">
             <SearchIcon style={{ color: "#001325" }} />

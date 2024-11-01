@@ -44,7 +44,8 @@ import {
         return {
           ...state,
           commentLoading: false,
-          comments: state.comments.filter(comment => comment.id !== action.payload.id), // Remove deleted comment
+          comments: state.comments.filter(comment => comment.id !== action.payload.id),
+          success: true,
         };
       case CREATE_COMMENT_FAILURE:
       case GET_COMMENT_FAILURE:

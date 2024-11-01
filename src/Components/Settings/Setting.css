@@ -125,14 +125,15 @@
   box-shadow: 0px -3px 0px 0px #FF7A7A inset;
 }
 .setting-save-btn button{
-  padding:  10px;
+  padding: 10px;
   width: 150px;
   box-sizing: border-box;
-  /* background: white; */
-  border: none;
   border-radius: 20px;
+  cursor: pointer;
+  border: 2px solid #00ff9c;
+  background: #cdede1;
   
-}
+ }
 .setting-img,.setting-save-btn{
 
   display:flex;
@@ -140,3 +141,7 @@
   justify-content:center;
 
 }
+
+
+
+

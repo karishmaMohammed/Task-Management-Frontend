@@ -2,14 +2,13 @@ import React from "react";
 import "./TaskManagement.css";
 import CloseIcon from "@mui/icons-material/Close";
 import { FaArrowRight } from "react-icons/fa6";
-import { usePopup } from '../../helpers/PopUpHelper';
+import { usePopup } from "../../helpers/PopUpHelper";
 
-
-function ActivitySideOpen() {
- 
+function ActivitySideOpen({ activityData }) {
   const { isActivityPopUpOpen, handleActivityPopUpToggle } = usePopup();
 
- 
+  console.log(activityData, "activityData");
+
   return (
     <>
       {isActivityPopUpOpen && (
@@ -26,37 +25,28 @@ function ActivitySideOpen() {
               <span style={{ color: "#257180", fontSize: "24px" }}>
                 Activity logs
               </span>
-              <div className="activity-close-btn" onClick={handleActivityPopUpToggle}>
+              <div
+                className="activity-close-btn"
+                onClick={handleActivityPopUpToggle}
+              >
                 <CloseIcon />
               </div>
             </div>
 
             <div className="activity-logs-div">
-              <div className="activity-logs-cont-div">
-                <div className="activity-logs-cont-div-top">
-                  <span>title</span>
-                  <span>time</span>
+              {activityData.map((log) => (
+                <div className="activity-logs-cont-div" key={log._id}>
+                  <div className="activity-logs-cont-div-top">
+                    <span style={{ color: "#257180", fontSize: "16px" }}>{log.updatedBy.name}</span>
+                    <span>{new Date(log.createdAt).toLocaleString()}</span>
+                  </div>
+                  <div className="activity-logs-cont-div-bottom">
+                    <span>{log.prevObj.value}</span>
+                    <FaArrowRight />
+                    <span>{log.newObj.value}</span>
+                  </div>
                 </div>
-                <div className="activity-logs-cont-div-bottom">
-                  <span>hdfhdgfhdfhdgfhdfdfhdgfhdfhdgfhdfhdgf</span>
-                  <FaArrowRight />
-                  <span>hdfhdgfhdfhdgfhdfhdgfhdfhdgfhdfhdgfhdfhdgfhdfhdgf</span>
-                </div>
-              </div>
-
-              <div className="activity-logs-cont-div">
-                <div className="activity-logs-cont-div-top">
-                  <span>title</span>
-                  <span>time</span>
-                </div>
-                <div className="activity-logs-cont-div-bottom">
-                  <span>hdfhdgfhdfhfhdgfhdfhdgfhdfhdgfhdfhdgfhdfhdgf</span>
-                  <FaArrowRight />
-                  <span>
-                    hdfhfhdgfhdfhdgfhdfhdgfhdfhdgfhdfhdgfhdfhdgfhdfhdgf
-                  </span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
