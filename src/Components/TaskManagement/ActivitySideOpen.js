@@ -34,19 +34,25 @@ function ActivitySideOpen({ activityData }) {
             </div>
 
             <div className="activity-logs-div">
-              {activityData.map((log) => (
-                <div className="activity-logs-cont-div" key={log._id}>
-                  <div className="activity-logs-cont-div-top">
-                    <span style={{ color: "#257180", fontSize: "16px" }}>{log.updatedBy.name}</span>
-                    <span>{new Date(log.createdAt).toLocaleString()}</span>
+              {activityData.length > 0 ? (
+                activityData.map((log) => (
+                  <div className="activity-logs-cont-div" key={log._id}>
+                    <div className="activity-logs-cont-div-top">
+                      <span style={{ color: "#257180", fontSize: "16px" }}>
+                        {log.updatedBy.name}
+                      </span>
+                      <span>{new Date(log.createdAt).toLocaleString()}</span>
+                    </div>
+                    <div className="activity-logs-cont-div-bottom">
+                      <span>{log.prevObj.value}</span>
+                      <FaArrowRight />
+                      <span>{log.newObj.value}</span>
+                    </div>
                   </div>
-                  <div className="activity-logs-cont-div-bottom">
-                    <span>{log.prevObj.value}</span>
-                    <FaArrowRight />
-                    <span>{log.newObj.value}</span>
-                  </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <div className="no-activities-msg">No activities available</div>
+              )}
             </div>
           </div>
         </div>

@@ -1,21 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchTasks, deleteTask } from "../../redux/actions/taskAction"; // Assuming you have a fetchTasks action
 import SearchIcon from "@mui/icons-material/Search";
 import { toast } from "react-toastify";
 import { handleNavigation } from "../../helpers/NavHelpers";
+import { debounce } from 'lodash';
 import "./Tasks.css";
 import Cookies from "js-cookie";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { MdDelete } from "react-icons/md";
 import Loader from "../Loader/Loader";
 
-
 function Tasks() {
   const nav = useNavigate();
   const dispatch = useDispatch();
-  const { loading, taskList, error, message } = useSelector((state) => state.tasks);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const { loading, taskList, totalPages, error, message } = useSelector(
+    (state) => state.tasks
+  );
 
   const toastStyle = {
     position: "top-right",
@@ -25,74 +29,82 @@ function Tasks() {
     draggable: true,
   };
   const [currentPage, setCurrentPage] = useState(1);
-  const tasksPerPage = 5; 
-
+  const tasksPerPage = 5;
 
   useEffect(() => {
-    dispatch(fetchTasks());
-  }, [dispatch]);
+    dispatch(fetchTasks(searchTerm, currentPage));
+  }, [dispatch, searchTerm, currentPage]);
 
-  const handleTaskDel = (e,task_id) => {
-    e.stopPropagation()
+  const handleSearch = (e) => {
+    debouncedSearch(e.target.value);
+    setCurrentPage(1); // Reset page number on new search
+  };
+  const debouncedSearch = useCallback(
+    debounce((value) => {
+      setSearchTerm(value);
+    }, 100),
+    []
+  );
+
+  const handleTaskDel = (e, task_id) => {
+    e.stopPropagation();
     dispatch(deleteTask(task_id));
-   if(message){
-    toast.success(message, toastStyle);
-   }
-  }
+    if (message) {
+      toast.success(message, toastStyle);
+    }
+  };
 
+  // if (loading) {
+  //   return <Loader />;
+  // }
 
-  if (loading) {
-    return <Loader />;
-  }
- 
   if (error) {
     toast.error(error, toastStyle);
   }
-
 
   const handleNav = () => {
     handleNavigation(nav, "task");
   };
 
-
   // Pagination logic
   const indexOfLastTask = currentPage * tasksPerPage;
   const indexOfFirstTask = indexOfLastTask - tasksPerPage;
   const currentTasks = taskList.slice(indexOfFirstTask, indexOfLastTask); // Current tasks to display
-  const totalPages = Math.ceil(taskList.length / tasksPerPage);
-
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
 
   const handleNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
   };
-
 
   return (
     <div style={{ marginTop: "5%", marginLeft: "15%", width: "100%" }}>
       <div className="upper-section">
-        <span style={{ color: "#257180", fontSize: "24px" }}>Your Task List</span>
+        <span style={{ color: "#257180", fontSize: "24px" }}>
+          Your Task List
+        </span>
         <div className="search-new-task">
           <div className="task-search">
             <SearchIcon style={{ color: "#001325" }} />
-            <input type="text" placeholder={"Search by task title"} />
+            <input
+              type="text"
+              value={searchTerm}
+              placeholder={"Search by task title"}
+              onChange={(e) => handleSearch(e)}
+            />
           </div>
           <button onClick={() => handleNav()}>+ New Task</button>
         </div>
       </div>
 
-
       <div className="task-table-container">
-        <table className="task-table-data">
+        {loading ? <Loader /> : <table className="task-table-data">
           <thead>
             <tr style={{ padding: "10px" }}>
               <th>Task Id</th>
@@ -116,7 +128,9 @@ function Tasks() {
                     <td>{task.task_title}</td>
                     <td>{task.due_date}</td>
                     <td>{task.task_status}</td>
-                    <td><MdDelete onClick={(e)=> handleTaskDel(e,task._id)}/></td>
+                    <td>
+                      <MdDelete onClick={(e) => handleTaskDel(e, task._id)} />
+                    </td>
                   </tr>
                 ) : null
               )
@@ -126,16 +140,23 @@ function Tasks() {
               </tr>
             )}
           </tbody>
-        </table>
+        </table>}
+        
       </div>
-
 
       {/* Pagination controls */}
       {/* {totalPages > 1 && ( */}
-      <div style={{display:'flex',alignItems:'center',justifyContent:'center',width:'100%'}}>
-      <div className="pagination">
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+        }}
+      >
+        <div className="pagination">
           <button
-            onClick={handlePrevPage}
+            onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
             className="prev-button"
           >
@@ -162,14 +183,11 @@ function Tasks() {
             <KeyboardBackspaceIcon style={{ transform: "rotate(180deg)" }} />
           </button>
         </div>
-
-
       </div>
-     
+
       {/* )} */}
     </div>
   );
 }
-
 
 export default Tasks;

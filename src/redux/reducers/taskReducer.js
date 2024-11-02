@@ -17,6 +17,7 @@ import {
 const initialState = {
   loading: false,
   taskList: [],
+  totalPages: 0,
   taskDetails: {}, // Added for task details
   error: '',
   message:'',
@@ -34,7 +35,8 @@ const taskReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        taskList: action.payload,
+        taskList: action.payload.taskList,
+        totalPages: action.payload.totalPages
       };
     case FETCH_TASKS_FAILURE:
       return {

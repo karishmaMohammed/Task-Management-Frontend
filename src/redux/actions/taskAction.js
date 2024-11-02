@@ -47,7 +47,7 @@ export const createTask = (taskData) => {
   };
 };
 
-export const fetchTasks = () => {
+export const fetchTasks = (search, page) => {
   return async (dispatch) => {
     dispatch({ type: FETCH_TASKS_REQUEST });
     try {
@@ -56,20 +56,29 @@ export const fetchTasks = () => {
       };
       const response = await axios.get(BASE_URL + "/task/get-task-list", {
         headers,
+        params: {
+          search,
+          page,
+        },
       });
-      const taskList = response.data.data.task_list;
+      
       dispatch({
         type: FETCH_TASKS_SUCCESS,
-        payload: taskList,
+        payload: {
+          taskList: response.data.data?.task_list,
+          totalPages: response.data.data?.total_pages,
+        },
       });
     } catch (error) {
+      console.error("Error fetching tasks:", error.response || error.message);
       dispatch({
         type: FETCH_TASKS_FAILURE,
-        error: error.message,
+        error: error.response?.data?.message || error.message,
       });
     }
   };
 };
+
 
 export const fetchTaskDetails = (task_sequence_id) => {
  
