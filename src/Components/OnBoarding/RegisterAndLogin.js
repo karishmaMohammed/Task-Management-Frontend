@@ -58,14 +58,7 @@ function RegisterAndLogin({ type, onclose, setTokenValue }) {
       console.error(error);
     }
   };
-  // Step 1: Retrieve the persisted state from localStorage
-  const persistedState = localStorage.getItem("persist:task_management");
-
-  const parsedState = JSON.parse(persistedState);
-
-  const memberDetails = JSON.parse(parsedState.member);
-  const fullName = memberDetails.member_details.full_name;
-  const notificationCount = memberDetails.notification_count;
+ 
  
 
   const handleSubmit = async (e) => {

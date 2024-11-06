@@ -33,15 +33,9 @@ function SideNavigator() {
   
 
   const handleLogout = () => {
-    // Clear the token from cookies
     Cookies.remove("user_task_token");
     nav('/');
     toast.success('Your logout succesfully!', toastStyle);
-    // Optional: Clear local storage if you are using local storage as well
-    // localStorage.clear();
-
-    // Redirect to the login page after logout
-   
   };
   return (
     <>

@@ -1,26 +1,13 @@
 import { createStore, applyMiddleware } from 'redux';
-import { thunk } from 'redux-thunk';
-import { persistStore, persistReducer, createTransform } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-// import { composeWithDevTools } from 'redux-devtools-extension';
+import {thunk} from 'redux-thunk'; // Fix import for thunk middleware
+// import { composeWithDevTools } from 'redux-devtools-extension'; // Uncomment if needed
 import rootReducer from './reducers/rootReducer'; // Assuming you'll combine multiple reducers
 
+// Create the Redux store with middleware
+const store = createStore(
+  rootReducer,
+  applyMiddleware(thunk)
+  // composeWithDevTools(applyMiddleware(thunk)) // Uncomment if using Redux DevTools in development
+);
 
-  // Persist configuration
-  const persistConfig = {
-    key: 'task_management',
-    storage,
-   
-  };
-  
-  const persistedReducer = persistReducer(persistConfig, rootReducer);
-  
-  const store = createStore(
-    persistedReducer,
-    applyMiddleware(thunk)
-    // composeWithDevTools(applyMiddleware(thunk))
-  );
-  
-  const persistor = persistStore(store);
-  
-  export { store, persistor };
+export { store };
