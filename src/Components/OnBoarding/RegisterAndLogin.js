@@ -36,7 +36,7 @@ function RegisterAndLogin({ type, onclose, setTokenValue }) {
       [name]: value,
     });
   };
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const verifyMember = async (token) => {
     try {
@@ -53,7 +53,7 @@ function RegisterAndLogin({ type, onclose, setTokenValue }) {
       if (response.data.meta.success) {
         Cookies.set("user_task_token", token);
         localStorage.setItem("user_task_token", token);
-        dispatch(fetchMemberDetails());
+        // dispatch(fetchMemberDetails());
       }
     } catch (error) {
       console.error(error);
