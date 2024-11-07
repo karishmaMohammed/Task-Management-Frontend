@@ -17,6 +17,8 @@ function HomePage({ mode }) {
   }
 
   
+
+  
   return (
     <div className={`home-page-container ${mode ? "dark-mode" : "light-mode"}`}>
       <div className="home-page">

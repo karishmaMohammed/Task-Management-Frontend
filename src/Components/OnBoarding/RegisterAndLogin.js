@@ -52,12 +52,14 @@ function RegisterAndLogin({ type, onclose, setTokenValue }) {
 
       if (response.data.meta.success) {
         Cookies.set("user_task_token", token);
+        localStorage.setItem("user_task_token", token);
         dispatch(fetchMemberDetails());
       }
     } catch (error) {
       console.error(error);
     }
   };
+  
  
  
 

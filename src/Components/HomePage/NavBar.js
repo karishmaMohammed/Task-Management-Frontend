@@ -6,17 +6,14 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import RegisterAndLogin from "../OnBoarding/RegisterAndLogin";
 
-
-
-function NavBar({ children}) {
+function NavBar({ children }) {
   const [mode, setMode] = useState(false);
   const [logInSignupPopUp, setLogInSignupPopUp] = useState(false);
   const [action, setAction] = useState("");
-  const [tokenvalue, setTokenValue] = useState('')
+  const [tokenvalue, setTokenValue] = useState("");
+  const token = localStorage.getItem("user_task_token");
 
   const nav = useNavigate();
- 
-  
 
   const customStyle = {
     control: (provided) => ({
@@ -32,16 +29,51 @@ function NavBar({ children}) {
     { value: "taskPriority", label: "Task Priority" },
     { value: "taskStatus", label: "Task Status" },
   ];
-  const handleMode = () => {
-    setMode((prev) => !prev);
+  const handleMode = async (mode) => {
+    try {
+      const headers = { "task-auth-token": token };
+      const response = await axios.post(
+        BASE_URL + "/member/edit-details",
+        { action: "update_mode", mode },
+        { headers }
+      );
+      console.log(mode);
+    } catch (error) {
+      console.log(error);
+    }
   };
+  // /edit-details
+  const handleMemberDetails = async () => {
+    try {
+      if (token) {
+        const headers = { "task-auth-token": token };
+        const response = await axios.get(
+          BASE_URL + "/member/get-member-details",
+          {
+            headers,
+          }
+        );
+
+        setMode(response.data.data.member_details.mode);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleMemberDetails();
+  }, []);
   const handleLogInSignupPopUp = (action) => {
     setAction(action);
     setLogInSignupPopUp(!logInSignupPopUp);
   };
+
   return (
     <>
-      <div className={`home-nav-container ${mode ? "dark-mode" : "light-mode"}`}>
+      <div
+        className={`home-nav-container ${mode ? "dark-mode" : "light-mode"}`}
+      >
         <div className="app-name-features">
           <img
             src="https://cdn-icons-png.freepik.com/256/5030/5030196.png?ga=GA1.1.
@@ -58,26 +90,36 @@ function NavBar({ children}) {
           />
         </div>
         <div className="log-sign-mode-btns">
-          <button onClick={() => handleLogInSignupPopUp("login")}>LogIn</button>
-          <button onClick={() => handleLogInSignupPopUp("register")}>
-            SignUp
-          </button>
-          {mode ? (
-            <img
-              src="https://cdn-icons-png.freepik.com/256/17329/17329316.png?ga=GA1.1.706441703.1694584519&semt=ais_hybrid"
-              alt="lite-mode"
-              width={40}
-              height={40}
-              onClick={handleMode}
-            />
-          ) : (
-            <img
-              src="https://cdn-icons-png.freepik.com/256/547/547433.png?ga=GA1.1.706441703.1694584519&semt=ais_hybrid"
-              alt="dark-mode"
-              width={40}
-              height={40}
-              onClick={handleMode}
-            />
+          {!token && (
+            <>
+              <button onClick={() => handleLogInSignupPopUp("login")}>
+                LogIn
+              </button>
+              <button onClick={() => handleLogInSignupPopUp("register")}>
+                SignUp
+              </button>
+            </>
+          )}
+          {token && (
+            <>
+              {mode ? (
+                <img
+                  src="https://cdn-icons-png.freepik.com/256/17329/17329316.png?ga=GA1.1.706441703.1694584519&semt=ais_hybrid"
+                  alt="lite-mode"
+                  width={40}
+                  height={40}
+                  onClick={() => handleMode(false)}
+                />
+              ) : (
+                <img
+                  src="https://cdn-icons-png.freepik.com/256/547/547433.png?ga=GA1.1.706441703.1694584519&semt=ais_hybrid"
+                  alt="dark-mode"
+                  width={40}
+                  height={40}
+                  onClick={() => handleMode(true)}
+                />
+              )}
+            </>
           )}
         </div>
       </div>
