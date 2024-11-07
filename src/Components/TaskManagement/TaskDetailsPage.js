@@ -26,7 +26,7 @@ import ActivityLogChangePopUp from "./ActivityLogChangePopUp";
 
 function TaskDetailsPage() {
   const { task_sequence_id } = useParams();
-  const [keyValuePair,setKeyValuePair] = useState({})
+  const [keyValuePair, setKeyValuePair] = useState({});
   const [isCustomData, setIsCustomData] = useState(false);
   const [activityData, setActivityData] = useState([]);
 
@@ -67,7 +67,7 @@ function TaskDetailsPage() {
   const handleSaveTitle = (key) => {
     setKeyValuePair({
       [key]: editedTitle,
-    })
+    });
     setPreviousObject({
       display_name: key,
       value: taskDetails?.task_title,
@@ -180,12 +180,11 @@ function TaskDetailsPage() {
       console.log(error);
     }
   };
-  
 
   const handleSaveDescription = (key) => {
     setKeyValuePair({
       [key]: editedDescription,
-    })
+    });
     setPreviousObject({
       display_name: "Task description",
       value: taskDetails?.description,
@@ -226,7 +225,7 @@ function TaskDetailsPage() {
   const handleChangePriority = (key) => {
     setKeyValuePair({
       [key]: taskDetails?.priority === false ? true : false,
-    })
+    });
     setPreviousObject({
       display_name: "Priority",
       value: taskDetails?.priority === true ? "Prior" : "Non Prior",
@@ -274,7 +273,7 @@ function TaskDetailsPage() {
                     <button
                       className="save-btn save"
                       onClick={() => {
-                        handleSaveTitle('task_title');
+                        handleSaveTitle("task_title");
                         handleActivityChangePopUpToggle();
                       }}
                     >
@@ -327,7 +326,7 @@ function TaskDetailsPage() {
                       backgroundColor:
                         currentPriority === true ? "green" : "gray",
                     }}
-                    onClick={()=>handleChangePriority('priority')}
+                    onClick={() => handleChangePriority("priority")}
                   />
                 </div>
                 <div className="details-field-priority">
@@ -341,7 +340,7 @@ function TaskDetailsPage() {
                     ]}
                     value={{ label: taskDetails?.task_status || "To Do" }}
                     styles={customStyles}
-                    onChange={()=>handleCommentPopUpToggle('status')} // Open the pop-up on status change
+                    onChange={() => handleCommentPopUpToggle("status")} // Open the pop-up on status change
                   />
                 </div>
               </div>
@@ -367,7 +366,7 @@ function TaskDetailsPage() {
                       <button
                         className="save-btn save"
                         onClick={() => {
-                          handleSaveDescription('description');
+                          handleSaveDescription("description");
                           handleActivityChangePopUpToggle();
                         }}
                       >
@@ -499,20 +498,20 @@ function TaskDetailsPage() {
               alt="Activity Icon"
             />
           </div>
-          <div className="details-right">
-            <div className="details-right-top">
-              <span
-                style={{
-                  color: "#257180",
-                  fontSize: "28px",
-                  borderBottom: "1px solid black",
-                }}
-              >
-                Dropped Fields
-              </span>
-              <div style={{ marginTop: "20px" }}>
-                {taskDetails?.custom_data &&
-                  Object.keys(taskDetails.custom_data).map((key) => {
+          {taskDetails?.custom_data ? (
+            <div className="details-right">
+              <div className="details-right-top">
+                <span
+                  style={{
+                    color: "#257180",
+                    fontSize: "28px",
+                    borderBottom: "1px solid black",
+                  }}
+                >
+                  Dropped Fields
+                </span>
+                <div style={{ marginTop: "20px" }}>
+                  {Object.keys(taskDetails.custom_data).map((key) => {
                     const field = taskDetails.custom_data[key];
                     return !field.is_default ? (
                       <div className="details-right-row" key={field._id}>
@@ -596,9 +595,10 @@ function TaskDetailsPage() {
                       </div>
                     ) : null;
                   })}
+                </div>
               </div>
             </div>
-          </div>
+          ) : null}
         </div>
       </div>
       {/* Activity Side Panel */}
