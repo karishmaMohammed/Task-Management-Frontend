@@ -17,7 +17,7 @@ function ActivityLogChangePopUp({ prevData, newData, customData, taskId,keyValue
       if(customData){
        
       response = await axios.post(`${BASE_URL}/task/edit-task-details`, 
-          { task_id : taskId, prev_obj: prevData, new_obj: newData},{headers});
+          { task_id : taskId, prev_obj: JSON.stringify(prevData), new_obj: JSON.stringify(newData)},{headers});
       }else if(!customData){
        response = await axios.post(`${BASE_URL}/task/edit-def-task-details`, 
           {updateData:keyValuePair, task_id : taskId, prev_obj: prevData, new_obj: newData},{headers});

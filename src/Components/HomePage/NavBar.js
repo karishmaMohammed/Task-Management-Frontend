@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import { BASE_URL } from "../../constant";
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import RegisterAndLogin from "../OnBoarding/RegisterAndLogin";
 
@@ -61,6 +61,21 @@ function NavBar({ children }) {
     }
   };
 
+  const isTokenExpired = () => {
+    if (!token) return true;
+  
+    try {
+      const decodedToken = jwtDecode(token);
+      const currentTime = Date.now() / 1000; // current time in seconds
+      const sevenDaysInSeconds = 7 * 24 * 60 * 60;
+  
+      return decodedToken.exp < currentTime || decodedToken.exp > currentTime + sevenDaysInSeconds;
+    } catch (error) {
+      console.error("Invalid token", error);
+      return true;
+    }
+  };
+
   useEffect(() => {
     handleMemberDetails();
   }, []);
@@ -90,16 +105,23 @@ function NavBar({ children }) {
           />
         </div>
         <div className="log-sign-mode-btns">
-          {!token && (
+          {!token ? (
             <>
-              <button onClick={() => handleLogInSignupPopUp("login")}>
-                LogIn
-              </button>
               <button onClick={() => handleLogInSignupPopUp("register")}>
                 SignUp
               </button>
+              <button onClick={() => handleLogInSignupPopUp("login")}>
+                LogIn
+              </button>
             </>
+          ) : (
+            isTokenExpired() && (
+              <button onClick={() => handleLogInSignupPopUp("login")}>
+                LogIn
+              </button>
+            )
           )}
+
           {token && (
             <>
               {mode ? (

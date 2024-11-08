@@ -238,6 +238,8 @@ function TaskDetailsPage() {
     handleActivityChangePopUpToggle();
   };
 
+  const dueDate = new Date(taskDetails?.due_date);
+
   return (
     <>
       <div
@@ -454,14 +456,18 @@ function TaskDetailsPage() {
 
             {/* Date Container */}
             <div className="details-field-details-div-right">
-              {/* <DateContainer
+              <DateContainer
                 task={{
                   id: 1,
-                  name: '',
-                  due_date: taskDetails?.due_date, // This is the due date string
+                  name: "",
+                  due_date: isNaN(dueDate)
+                    ? new Date().toISOString().split("T")[0]
+                    : dueDate.toISOString().split("T")[0],
                 }}
-                onUpdateDueDate={(newDate) => console.log('New Due Date:', newDate)}
-              /> */}
+                onUpdateDueDate={(newDate) =>
+                  console.log("New Due Date:", newDate)
+                }
+              />
             </div>
           </div>
 

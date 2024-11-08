@@ -44,19 +44,41 @@ function Notification() {
         }
       );
 
-      setAllNotifications((prevNotifications) => [
-        ...prevNotifications,
-        ...response.data.data.all_notification,
-      ]);
+      setAllNotifications((prevNotifications) => {
+        const combinedNotifications = [
+          ...prevNotifications,
+          ...response.data.data.all_notification,
+        ];
+      
+        // Remove duplicates by `id`
+        const uniqueNotifications = combinedNotifications.filter(
+          (notification, index, self) =>
+            index === self.findIndex((n) => n.id === notification.id)
+        );
+      
+        return uniqueNotifications;
+      });
+      
       setAllNotificationsCount(response.data.data.all_count);
 
-      setUnReadNotifications((prevNotifications) => [
-        ...prevNotifications,
-        ...response.data.data.un_read_notification,
-      ]);
+      setUnReadNotifications((prevNotifications) => {
+        const combinedNotifications = [
+          ...prevNotifications,
+          ...response.data.data.un_read_notification,
+        ];
+      
+        // Filter out duplicates by `id`
+        const uniqueNotifications = combinedNotifications.filter(
+          (notification, index, self) =>
+            index === self.findIndex((n) => n.id === notification.id)
+        );
+      
+        return uniqueNotifications;
+      });
+      
       setAllUnReadNotifications(response.data.data.un_read_count);
       // console.log(response.data.data.un_read_notification);
-      // const notificationsToDisplay = activeElement === 'notif-unread' ? unReadNotification : allNotification;
+      const notificationsToDisplay = activeElement === 'notif-unread' ? unReadNotification : allNotification;
 
       setActivePage(activePage + 1);
     } catch (error) {
