@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createComments } from "../../redux/actions/commentsAction";
+import { createComments, getComments } from "../../redux/actions/commentsAction";
 import Loader from "../Loader/Loader";
 import { toast } from "react-toastify";
 import { FaArrowRight } from "react-icons/fa6";
@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { BASE_URL } from "../../constant";
 
-function CommentPopUp({ taskId,prevData, newData,keyValuePair }) {
+function CommentPopUp({ taskId,prevData, newData,keyValuePair, setData}) {
     
   const { isCommentPopUpOpen, handleCommentPopUpToggle } = usePopup();
 
@@ -24,13 +24,15 @@ function CommentPopUp({ taskId,prevData, newData,keyValuePair }) {
     const headers = {
       "task-auth-token": Cookies.get("user_task_token"),
     };
-    await axios.post(`${BASE_URL}/task/edit-def-task-details`, 
+   const res = await axios.post(`${BASE_URL}/task/edit-def-task-details`, 
       {updateData:keyValuePair, task_id : taskId, prev_obj: prevData, new_obj: newData},{headers});
   
     dispatch(createComments(comment, taskId));
 
     if (success) {
+      setData(res)
       toast.success("Comment created successfully!", toastStyle);
+      dispatch(getComments(taskId));
       handleCommentPopUpToggle();
     }
   };

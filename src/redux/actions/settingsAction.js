@@ -21,7 +21,7 @@ export const updateProfile = (name, phone, gender) => async (dispatch) => {
       {
         name,
         phone,
-        gender,
+       gender,
         action: "update",
       },
       { headers }

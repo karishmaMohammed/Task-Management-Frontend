@@ -10,6 +10,7 @@ import './Setting.css'
 
 function SettingsPage() {
   const [selectedSection, setSelectedSection] = useState("general");
+  const [data, setData] = useState(false)
 
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.profileDetails.profile);
@@ -27,7 +28,7 @@ function SettingsPage() {
  
   useEffect(() => {
     dispatch(getProfileInfo());
-  }, [dispatch]);
+  }, [dispatch, data]);
 
   useEffect(() => {
     if (profile) {
@@ -38,7 +39,7 @@ function SettingsPage() {
         gender: profile.gender || "",
       });
     }
-  }, [profile]);
+  }, [profile, data]);
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -56,12 +57,11 @@ function SettingsPage() {
     dispatch(
       updateProfile(
         formData.fullName,
-        formData.email,
         formData.phoneNumber,
         formData.gender
       )
     );
-
+    setData(true)
     // Show success toast
     toast.success("Profile updated successfully!", {
       position: "top-right",

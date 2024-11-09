@@ -63,7 +63,7 @@ function TaskDetailsPage() {
   const [newObject, setNewObject] = useState({});
   const [isFieldEditing, setIsFieldEditing] = useState({}); // To track which field is being edited
   const [previousTitle, setPreviousTitle] = useState(taskDetails?.task_title);
-
+  const [data, setData] = useState(false);
   const handleSaveTitle = (key) => {
     setKeyValuePair({
       [key]: editedTitle,
@@ -120,7 +120,7 @@ function TaskDetailsPage() {
 
   useEffect(() => {
     dispatch(fetchTaskDetails(task_sequence_id));
-  }, [task_sequence_id, dispatch]);
+  }, [task_sequence_id, dispatch, data]);
 
   useEffect(() => {
     if (taskDetails) {
@@ -146,21 +146,18 @@ function TaskDetailsPage() {
     if (taskDetails) {
       dispatch(getComments(taskDetails?._id));
     }
-  }, [dispatch, taskDetails?._id]);
+  }, [dispatch, taskDetails?._id, data]);
 
   const handleDeleteComment = (comment_id) => {
     dispatch(deleteComments(comment_id));
     if (success) {
+      
       toast.success("Comment deleted successfully!", toastStyle);
       dispatch(getComments(taskDetails?._id));
     }
   };
 
-  // Save changes handlers
-  // const handleSaveTitle = () => {
-  //   setIsTitleEditable(false);
-  //   setOriginalTitle(editedTitle);
-  // };
+  
   const handleGetActivityLogs = async () => {
     try {
       const headers = {
@@ -628,11 +625,12 @@ function TaskDetailsPage() {
           customData={isCustomData}
           taskId={taskDetails?._id}
           keyValuePair={keyValuePair}
+          setData={setData}
         />
       )}
       {isActivityPopUpOpen && <ActivitySideOpen activityData={activityData} />}
       {isCommentPopUpOpen && <CommentPopUp keyValuePair={keyValuePair} taskId={taskDetails?._id} prevData={prevObject}
-          newData={newObject} />}{" "}
+          newData={newObject}  setData={setData} />}{" "}
       {/* Show CommentPopUp when true */}
     </>
   );

@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { BASE_URL } from "../../constant";
 
-function ActivityLogChangePopUp({ prevData, newData, customData, taskId,keyValuePair }) {
+function ActivityLogChangePopUp({ prevData, newData, customData, taskId,keyValuePair, setData }) {
   const { isActivityChangePopUpOpen, handleActivityChangePopUpToggle } =
     usePopup();
   const handleEditTaskDetails = async () => {
@@ -24,6 +24,7 @@ function ActivityLogChangePopUp({ prevData, newData, customData, taskId,keyValue
       }
         console.log(response.data.meta.success);
         if(response.data.meta.success){
+          setData(response)
           handleActivityChangePopUpToggle()
         }
     } catch (error) {
