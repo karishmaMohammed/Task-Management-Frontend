@@ -11,6 +11,8 @@ const toastStyle = {
 
   
 export const handleNavigation = (nav, type) => {
+  
+  // localStorage.getItem("user_task_token", token);
     const token = Cookies.get("user_task_token");
     if(type === 'task' && token){
       nav("/task-form");
@@ -18,6 +20,7 @@ export const handleNavigation = (nav, type) => {
       nav("/task-list");
     }else{
       toast.error('Please login', toastStyle);
+     
       nav('/');
     }
   }

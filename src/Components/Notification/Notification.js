@@ -53,7 +53,7 @@ function Notification() {
         // Remove duplicates by `id`
         const uniqueNotifications = combinedNotifications.filter(
           (notification, index, self) =>
-            index === self.findIndex((n) => n.id === notification.id)
+            index === self.findIndex((n) => n._id === notification._id)
         );
       
         return uniqueNotifications;
@@ -70,14 +70,14 @@ function Notification() {
         // Filter out duplicates by `id`
         const uniqueNotifications = combinedNotifications.filter(
           (notification, index, self) =>
-            index === self.findIndex((n) => n.id === notification.id)
+            index === self.findIndex((n) => n._id === notification._id)
         );
       
         return uniqueNotifications;
       });
       
       setAllUnReadNotifications(response.data.data.un_read_count);
-      // console.log(response.data.data.un_read_notification);
+      console.log(response.data.data.un_read_count);
       const notificationsToDisplay = activeElement === 'notif-unread' ? unReadNotification : allNotification;
 
       setActivePage(activePage + 1);

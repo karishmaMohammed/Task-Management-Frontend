@@ -9,7 +9,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMemberDetails } from "../../redux/actions/memberAction";
 
-function RegisterAndLogin({ type, onclose, setTokenValue }) {
+function RegisterAndLogin({ type, onclose }) {
   const nav = useNavigate();
   const [togglePopUp, setTogglePopUp] = useState(type);
   const [formData, setFormData] = useState({

@@ -10,7 +10,6 @@ function NavBar({ children }) {
   const [mode, setMode] = useState(false);
   const [logInSignupPopUp, setLogInSignupPopUp] = useState(false);
   const [action, setAction] = useState("");
-  const [tokenvalue, setTokenValue] = useState("");
   const token = localStorage.getItem("user_task_token");
 
   const nav = useNavigate();
@@ -66,10 +65,12 @@ function NavBar({ children }) {
   
     try {
       const decodedToken = jwtDecode(token);
-      const currentTime = Date.now() / 1000; // current time in seconds
+      const currentTime = Date.now() / 1000; 
       const sevenDaysInSeconds = 7 * 24 * 60 * 60;
-  
-      return decodedToken.exp < currentTime || decodedToken.exp > currentTime + sevenDaysInSeconds;
+      console.log(decodedToken.exp < currentTime || decodedToken.exp > 
+        currentTime + sevenDaysInSeconds)
+      return decodedToken.exp < currentTime || decodedToken.exp > 
+      currentTime + sevenDaysInSeconds;
     } catch (error) {
       console.error("Invalid token", error);
       return true;
@@ -145,12 +146,11 @@ function NavBar({ children }) {
           )}
         </div>
       </div>
-      {React.cloneElement(children, { mode })}
+      {React.cloneElement(children, { mode, isTokenExpired })}
       {logInSignupPopUp && (
         <RegisterAndLogin
           type={action}
           onclose={() => setLogInSignupPopUp(!logInSignupPopUp)}
-          setTokenValue={setTokenValue}
         />
       )}
     </>

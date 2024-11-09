@@ -6,21 +6,29 @@ import { BASE_URL } from "../../constant";
 import { handleNavigation } from "../../helpers/NavHelpers";
 import Cookies from "js-cookie";
 import upArrow from "../../Assets/ArrowUpRight.png";
+import RegisterAndLogin from "../OnBoarding/RegisterAndLogin";
 
 
-function HomePage({ mode }) {
+function HomePage({ mode, isTokenExpired }) {
   
+  const [loginPopUp, setLoginPopUp] = useState(false)
   const nav = useNavigate();
 
   const handleNav = () => {
-    handleNavigation(nav, 'task')
+    if(!isTokenExpired()){
+      handleNavigation(nav, 'task')
+    }else{
+      setLoginPopUp(!loginPopUp)
+    }
+   
   }
 
   
 
   
   return (
-    <div className={`home-page-container ${mode ? "dark-mode" : "light-mode"}`}>
+    <>
+   <div className={`home-page-container ${mode ? "dark-mode" : "light-mode"}`}>
       <div className="home-page">
         <div className="home-page-text">
           <span className="home-page-text-head">TASK MANAGEMENT</span>
@@ -59,6 +67,9 @@ function HomePage({ mode }) {
         <span>Done by</span>
       </div> */}
     </div>
+    {loginPopUp && <RegisterAndLogin  type='login' onclose={()=> setLoginPopUp(!loginPopUp)} />}
+    </>
+   
   );
 }
 

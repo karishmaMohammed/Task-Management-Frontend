@@ -5,8 +5,12 @@ import Loader from "../Loader/Loader";
 import { toast } from "react-toastify";
 import { FaArrowRight } from "react-icons/fa6";
 import { usePopup } from "../../helpers/PopUpHelper";
+import Cookies from "js-cookie";
+import axios from "axios";
+import { BASE_URL } from "../../constant";
 
-function CommentPopUp({ taskId }) {
+function CommentPopUp({ taskId,prevData, newData,keyValuePair }) {
+    
   const { isCommentPopUpOpen, handleCommentPopUpToggle } = usePopup();
 
   const [comment, setComment] = useState("");
@@ -16,7 +20,13 @@ function CommentPopUp({ taskId }) {
     (state) => state.comment
   );
 
-  const handleCreateComment = () => {
+  const handleCreateComment = async() => {
+    const headers = {
+      "task-auth-token": Cookies.get("user_task_token"),
+    };
+    await axios.post(`${BASE_URL}/task/edit-def-task-details`, 
+      {updateData:keyValuePair, task_id : taskId, prev_obj: prevData, new_obj: newData},{headers});
+  
     dispatch(createComments(comment, taskId));
 
     if (success) {

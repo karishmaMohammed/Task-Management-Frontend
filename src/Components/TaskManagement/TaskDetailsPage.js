@@ -195,7 +195,20 @@ function TaskDetailsPage() {
     });
     setIsDescriptionEditable(false);
   };
-
+  const selectedStatus = (key,selected) => {
+    setKeyValuePair({
+      [key]: selected.label,
+    });
+    setPreviousObject({
+      display_name: "Task status",
+      value: taskDetails?.task_status,
+    });
+    setNewObject({
+      display_name: "Task status",
+      value: selected.label,
+    });
+    handleCommentPopUpToggle()
+  };
   // Cancel changes handlers
   const handleCancelTitle = () => {
     setEditedTitle(originalTitle); // Revert to the original title
@@ -342,7 +355,7 @@ function TaskDetailsPage() {
                     ]}
                     value={{ label: taskDetails?.task_status || "To Do" }}
                     styles={customStyles}
-                    onChange={() => handleCommentPopUpToggle("status")} // Open the pop-up on status change
+                    onChange={(selected) => selectedStatus('task_status',selected)} // Open the pop-up on status change
                   />
                 </div>
               </div>
@@ -618,7 +631,8 @@ function TaskDetailsPage() {
         />
       )}
       {isActivityPopUpOpen && <ActivitySideOpen activityData={activityData} />}
-      {isCommentPopUpOpen && <CommentPopUp taskId={taskDetails?._id} />}{" "}
+      {isCommentPopUpOpen && <CommentPopUp keyValuePair={keyValuePair} taskId={taskDetails?._id} prevData={prevObject}
+          newData={newObject} />}{" "}
       {/* Show CommentPopUp when true */}
     </>
   );

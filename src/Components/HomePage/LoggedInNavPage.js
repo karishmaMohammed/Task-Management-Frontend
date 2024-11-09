@@ -45,6 +45,7 @@ function LoggedInNavPage() {
     (state) => state.member.notification_count
   );
 
+  console.log(notificationCount)
   // const handleMakeZero = () => {
   //   setNotificationCount(0);
   // };
