@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { fetchTasks, deleteTask } from "../../redux/actions/taskAction"; // Assuming you have a fetchTasks action
+import { fetchTasks, deleteTask } from "../../redux/actions/taskAction";
 import SearchIcon from "@mui/icons-material/Search";
 import { toast } from "react-toastify";
 import { handleNavigation } from "../../helpers/NavHelpers";
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 import "./Tasks.css";
 import Cookies from "js-cookie";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
@@ -16,6 +16,7 @@ function Tasks() {
   const nav = useNavigate();
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
+  const [data, setData] = useState(false);
 
   const { loading, taskList, totalPages, error, message } = useSelector(
     (state) => state.tasks
@@ -28,17 +29,19 @@ function Tasks() {
     pauseOnHover: true,
     draggable: true,
   };
+
   const [currentPage, setCurrentPage] = useState(1);
-  const tasksPerPage = 5;
+  const tasksPerPage = 10; // Set to 10 to match the backend response
 
   useEffect(() => {
     dispatch(fetchTasks(searchTerm, currentPage));
-  }, [dispatch, searchTerm, currentPage]);
+  }, [dispatch, searchTerm, currentPage, data]);
 
   const handleSearch = (e) => {
     debouncedSearch(e.target.value);
     setCurrentPage(1); // Reset page number on new search
   };
+
   const debouncedSearch = useCallback(
     debounce((value) => {
       setSearchTerm(value);
@@ -48,15 +51,13 @@ function Tasks() {
 
   const handleTaskDel = (e, task_id) => {
     e.stopPropagation();
+    setData(task_id);
     dispatch(deleteTask(task_id));
+
     if (message) {
       toast.success(message, toastStyle);
     }
   };
-
-  // if (loading) {
-  //   return <Loader />;
-  // }
 
   if (error) {
     toast.error(error, toastStyle);
@@ -65,11 +66,6 @@ function Tasks() {
   const handleNav = () => {
     handleNavigation(nav, "task");
   };
-
-  // Pagination logic
-  const indexOfLastTask = currentPage * tasksPerPage;
-  const indexOfFirstTask = indexOfLastTask - tasksPerPage;
-  const currentTasks = taskList.slice(indexOfFirstTask, indexOfLastTask); // Current tasks to display
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -104,48 +100,50 @@ function Tasks() {
       </div>
 
       <div className="task-table-container">
-        {loading ? <Loader /> : <table className="task-table-data">
-          <thead>
-            <tr style={{ padding: "10px" }}>
-              <th>Task Id</th>
-              <th>Task Title</th>
-              <th>Due Date</th>
-              <th>Task Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentTasks && currentTasks.length > 0 ? (
-              currentTasks.map((task) =>
-                task ? (
-                  <tr
-                    key={task._id}
-                    onClick={() =>
-                      nav(`/task-details/${task.task_sequence_id}`)
-                    }
-                  >
-                    <td>{task.task_sequence_id}</td>
-                    <td>{task.task_title}</td>
-                    <td>{task.due_date}</td>
-                    <td>{task.task_status}</td>
-                    <td>
-                      <MdDelete onClick={(e) => handleTaskDel(e, task._id)} />
-                    </td>
-                  </tr>
-                ) : null
-              )
-            ) : (
-              <tr>
-                <td colSpan="4">No tasks available</td>
+        {loading ? (
+          <Loader />
+        ) : (
+          <table className="task-table-data">
+            <thead>
+              <tr style={{ padding: "10px" }}>
+                <th>Task Id</th>
+                <th>Task Title</th>
+                <th>Due Date</th>
+                <th>Task Status</th>
+                <th>Action</th>
               </tr>
-            )}
-          </tbody>
-        </table>}
-        
+            </thead>
+            <tbody>
+              {taskList && taskList.length > 0 ? (
+                taskList.map((task) =>
+                  task ? (
+                    <tr
+                      key={task._id}
+                      onClick={() =>
+                        nav(`/task-details/${task.task_sequence_id}`)
+                      }
+                    >
+                      <td>{task.task_sequence_id}</td>
+                      <td>{task.task_title}</td>
+                      <td>{task.due_date}</td>
+                      <td>{task.task_status}</td>
+                      <td>
+                        <MdDelete onClick={(e) => handleTaskDel(e, task._id)} />
+                      </td>
+                    </tr>
+                  ) : null
+                )
+              ) : (
+                <tr>
+                  <td colSpan="5">No tasks available</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {/* Pagination controls */}
-      {/* {totalPages > 1 && ( */}
       <div
         style={{
           display: "flex",
@@ -184,8 +182,6 @@ function Tasks() {
           </button>
         </div>
       </div>
-
-      {/* )} */}
     </div>
   );
 }

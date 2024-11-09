@@ -54,7 +54,7 @@ function TaskDetailsPage() {
   const { taskDetails, loading, error, subTaskData } = useSelector(
     (state) => state.tasks
   );
-  const { comments, commentLoading, success } = useSelector(
+  const { comments, commentLoading, success, done } = useSelector(
     (state) => state.comment
   );
   const [fieldsValues, setFieldsValues] = useState({});
@@ -148,13 +148,15 @@ function TaskDetailsPage() {
     }
   }, [dispatch, taskDetails?._id, data]);
 
-  const handleDeleteComment = (comment_id) => {
+  const handleDeleteComment = async(comment_id) => {
     dispatch(deleteComments(comment_id));
-    if (success) {
+    toast.success("Comment deleted successfully!", toastStyle);
+    dispatch(getComments(taskDetails?._id));
+    // if (success || done) {
+    //   await 
       
-      toast.success("Comment deleted successfully!", toastStyle);
-      dispatch(getComments(taskDetails?._id));
-    }
+      
+    // }
   };
 
   

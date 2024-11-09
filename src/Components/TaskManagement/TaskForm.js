@@ -10,7 +10,9 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { handleNavigation } from "../../helpers/NavHelpers";
 import { useDispatch, useSelector } from 'react-redux';
-import { createTask } from '../../redux/actions/taskAction'; // import the action
+import { createTask, fetchTasks} from '../../redux/actions/taskAction'; // import the action
+import Loader from "../Loader/Loader";
+import { toast } from "react-toastify";
 
 const draggableItems = [
   {
@@ -58,6 +60,7 @@ function TaskForm() {
   const [tempField, setTempField] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
+ 
   const [defaultFormData, setDefaultFormData] = useState({
     title: "",
     description: "",
@@ -66,7 +69,7 @@ function TaskForm() {
   });
   const { task_id} = useParams()
   const dispatch = useDispatch();
-  const { loading, error, success, taskList } = useSelector((state) => state.tasks);
+  const { loading, error, message, taskList } = useSelector((state) => state.tasks);
   
 
   const nav = useNavigate();
@@ -160,7 +163,7 @@ function TaskForm() {
     }, {});
   
     setSavedData(formattedData);
-    console.log("Formatted Form Data:", formattedData);
+    
   
     // Send formattedData to your backend
     dispatch(createTask({
@@ -168,14 +171,17 @@ function TaskForm() {
       description: defaultFormData.description,
       due_date: defaultFormData.due_date,
       priority: defaultFormData.priority,
-      custom_data: JSON.stringify(formattedData), // send formattedData to API
-      main_task_seq_id: task_id ? task_id : '', // Use relevant value for main_task_seq_id
+      custom_data: JSON.stringify(formattedData), 
+      main_task_seq_id: task_id ? task_id : '',
     }));
-
+   
     if(taskList.length){
+      console.log(error)
+    //  toast.success('')
       handleNavigation(nav, 'list')
     }
   };
+  if(loading) return <Loader />
   
 
   return (

@@ -61,6 +61,7 @@ const taskReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: action.payload,
+        message: action.payload
       };
     case FETCH_TASK_DETAILS_REQUEST:
       return {

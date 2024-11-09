@@ -14,7 +14,8 @@ import {
     commentLoading: false,
     comments: [],
     commentError: null,
-    success: false
+    success: false,
+    done: false,
   };
   
   const commentsReducer = (state = initialState, action) => {
@@ -31,8 +32,10 @@ import {
         return {
           ...state,
           commentLoading: false,
+          done:true,
           comments: [...state.comments, action.payload], // Add new comment to the list
           success: action.payload,
+         
         };
       case GET_COMMENT_SUCCESS:
         return {
@@ -44,6 +47,7 @@ import {
         return {
           ...state,
           commentLoading: false,
+          done:true,
           comments: state.comments.filter(comment => comment.id !== action.payload.id),
           success: true,
         };

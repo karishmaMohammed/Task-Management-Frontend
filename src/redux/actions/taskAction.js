@@ -34,7 +34,7 @@ export const createTask = (taskData) => {
       ); // Adjust the API endpoint as needed
       dispatch({
         type: CREATE_TASK_SUCCESS,
-        payload: response.data.data, // The response data from the API
+        payload: response.data.meta.message, // The response data from the API
       });
     } catch (error) {
       dispatch({
