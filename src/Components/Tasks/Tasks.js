@@ -31,7 +31,7 @@ function Tasks() {
   };
 
   const [currentPage, setCurrentPage] = useState(1);
-  const tasksPerPage = 10; // Set to 10 to match the backend response
+  const tasksPerPage = 8; // Set to 10 to match the backend response
 
   useEffect(() => {
     dispatch(fetchTasks(searchTerm, currentPage));

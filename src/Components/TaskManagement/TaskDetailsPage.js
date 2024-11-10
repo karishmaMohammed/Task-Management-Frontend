@@ -152,11 +152,7 @@ function TaskDetailsPage() {
     dispatch(deleteComments(comment_id));
     toast.success("Comment deleted successfully!", toastStyle);
     dispatch(getComments(taskDetails?._id));
-    // if (success || done) {
-    //   await 
-      
-      
-    // }
+    
   };
 
   
@@ -526,7 +522,7 @@ function TaskDetailsPage() {
                     borderBottom: "1px solid black",
                   }}
                 >
-                  Dropped Fields
+                  Dropped/Custom Fields
                 </span>
                 <div style={{ marginTop: "20px" }}>
                   {Object.keys(taskDetails.custom_data).map((key) => {

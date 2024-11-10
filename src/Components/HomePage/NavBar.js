@@ -111,9 +111,7 @@ function NavBar({ children }) {
               <button onClick={() => handleLogInSignupPopUp("register")}>
                 SignUp
               </button>
-              <button onClick={() => handleLogInSignupPopUp("login")}>
-                LogIn
-              </button>
+              
             </>
           ) : (
             isTokenExpired() && (
@@ -122,6 +120,9 @@ function NavBar({ children }) {
               </button>
             )
           )}
+          <button onClick={() => handleLogInSignupPopUp("login")}>
+                LogIn
+              </button>
 
           {token && (
             <>
