@@ -25,8 +25,11 @@ function NavBar({ children }) {
   };
   const featureOptions = [
     { value: "createTask", label: "Create Task" },
-    { value: "taskPriority", label: "Task Priority" },
-    { value: "taskStatus", label: "Task Status" },
+    { value: "taskStatus", label: "Status updates" },
+    { value: "notifications", label: "Notifications" },
+    { value: "activityLogs", label: "Activity logs" },
+    { value: "comments", label: "Comments" },
+    { value: "taskPriority", label: "Task priority"},
   ];
   const handleMode = async (mode) => {
     try {
