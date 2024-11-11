@@ -31,6 +31,7 @@ function RegisterAndLogin({ type, onclose }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log(e.target.value)
     setFormData({
       ...formData,
       [name]: value,
@@ -74,7 +75,7 @@ function RegisterAndLogin({ type, onclose }) {
             email: formData.email,
             phone_number: formData.phoneNumber,
             password: formData.password,
-            gender: true,
+            gender: formData.gender,
           }
         );
         if (registerResponse.data.meta.success !== true) {
@@ -180,8 +181,8 @@ function RegisterAndLogin({ type, onclose }) {
                   style={{width:'10px'}}
                     type="radio"
                     name="gender"
-                    value="Male"
-                    checked={formData.gender === "Male"}
+                    value="male"
+                    checked={formData.gender === "male"}
                     onChange={handleChange}
                   />
                   Male
@@ -191,8 +192,8 @@ function RegisterAndLogin({ type, onclose }) {
                    style={{width:'10px'}}
                     type="radio"
                     name="gender"
-                    value="Female"
-                    checked={formData.gender === "Female"}
+                    value="female"
+                    checked={formData.gender === "female"}
                     onChange={handleChange}
                   />
                   Female

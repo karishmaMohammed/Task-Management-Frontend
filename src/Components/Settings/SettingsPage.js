@@ -41,10 +41,13 @@ function SettingsPage() {
     }
   }, [profile, data]);
 
+
   // Handle form input changes
   const handleChange = (e) => {
+    console.log(e.target.value)
     setFormData({
       ...formData,
+
       [e.target.name]: e.target.value,
     });
   };
@@ -175,7 +178,7 @@ function SettingsPage() {
                   <input
                     type="radio"
                     name="gender"
-                    value="Male"
+                    value="male"
                     checked={formData.gender === "male"}
                     onChange={handleChange}
                   />
@@ -185,7 +188,7 @@ function SettingsPage() {
                   <input
                     type="radio"
                     name="gender"
-                    value="Female"
+                    value="female"
                     checked={formData.gender === "female"}
                     onChange={handleChange}
                   />
